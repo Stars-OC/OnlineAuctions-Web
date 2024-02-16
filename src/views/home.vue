@@ -40,7 +40,7 @@
 								<div style="padding: 14px">
 									<span>{{ time }}</span>
 									<div class="bottom">
-										<time class="time">{{ currentDate }}</time>
+										<time class="time">114514</time>
 										<el-button text class="button">点击查看</el-button>
 									</div>
 								</div>

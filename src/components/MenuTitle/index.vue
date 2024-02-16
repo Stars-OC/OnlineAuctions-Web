@@ -16,7 +16,6 @@
 		<el-menu-item index="/"> 首页 </el-menu-item>
 		<el-menu-item index="/auction"> 拍卖场 </el-menu-item>
 		<el-menu-item index="/auction/later"> 近期拍卖 </el-menu-item>
-		<el-menu-item index="/auction/result"> 拍卖结果 </el-menu-item>
 		<el-menu-item index="/help"> 帮助中心 </el-menu-item>
 		<div class="flex-grow" />
 		<el-menu-item index="/user/my"> 我的 </el-menu-item>
