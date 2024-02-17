@@ -9,7 +9,7 @@
 				</div>
 				<div style="margin-top: 3px; font-size: 12px; color: #999">信息更新时间：{{ state.updateAt }}</div>
 			</el-card>
-			<cargo-info></cargo-info>
+			<cargo-info :cargoId="auction.cargoId"></cargo-info>
 			<el-card class="operation">
 				<el-row :gutter="20">
 					<el-col :span="12">
@@ -52,7 +52,7 @@
 export default {
 	data() {
 		return {
-			auctionId: 1,
+			auctionId: this.$route.params.id,
 			additionalPrice: 0,
 			state: {
 				balance: 0.0,
@@ -60,6 +60,7 @@ export default {
 				endTime: 0,
 			},
 			auction: {
+				cargoId: 1,
 				startingPrice: 120.0,
 				additionalPrice: 10.0,
 				hammerPrice: 130.0,
@@ -95,6 +96,12 @@ export default {
 			],
 		};
 	},
+	created() {
+		// this.auctionId = this.$route.params.id;
+	},
+	computed:{
+
+	}
 };
 </script>
 

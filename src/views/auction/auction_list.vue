@@ -41,7 +41,7 @@
 				</el-card>
 				<el-card class="main">
 					<el-table :data="auctionList" style="width: 100%" max-height="57vh">
-						<<el-table-column label="拍卖场id" prop="auctionId"></el-table-column>
+						<el-table-column label="拍卖场id" prop="auctionId"></el-table-column>
 						<el-table-column label="货物id ">
 							<template v-slot="scope">
 								{{ scope.row.cargoId }}

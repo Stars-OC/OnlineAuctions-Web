@@ -1,12 +1,9 @@
 <template>
 	<el-menu
-		:default-active="activeIndex"
 		class="title"
 		mode="horizontal"
 		:ellipsis="false"
-		@select="handleSelect"
 		text-color="#1E1E1E"
-		active-text-color="#18B5D4"
 		:router="true"
 	>
 		<el-menu-item index="/">

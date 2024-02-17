@@ -1,8 +1,10 @@
 <template>
 	<div class="body">
 		<el-card>
+			
 			<el-row :gutter="20">
 				<el-col :span="7">
+					<!-- {{ cargoId }} -->
 					<img :src="image" style="border: 3px solid #a5a4a4" class="image" width="350px" />
 					<div>轮播</div>
 				</el-col>
@@ -13,7 +15,6 @@
 						title="详细信息："
 						direction="vertical"
 						:column="3"
-						:size="size"
 						style="margin-top: 50px; font-size: 18px; text-align: center; width: 400px"
 						border
 					>
@@ -64,6 +65,10 @@ export default {
 			},
 		};
 	},
+	created(){
+		console.log(this.cargoId)
+	},
+	props: ['cargoId']
 };
 </script>
 
