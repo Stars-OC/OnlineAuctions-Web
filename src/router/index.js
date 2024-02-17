@@ -23,10 +23,16 @@ const router = createRouter({
 			name: 'auction_list',
 			component: () => import('../views/auction/auction_list.vue'),
 		},
+
 		{
 			path: '/auction/later',
 			name: 'auction_list_later',
 			component: () => import('../views/auction/auction_list_later.vue'),
+		},
+		{
+			path: '/help',
+			name: 'help',
+			component: () => import('../views/help.vue'),
 		},
 		{
 			path: '/auction/info',

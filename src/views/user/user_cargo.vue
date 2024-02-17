@@ -17,6 +17,9 @@
 					</el-table-column>
 				</el-table>
 				<el-pagination small background layout="prev, pager, next" :total="total"  />
+				<div style="text-align: center;margin-top: 5px;">
+					<el-button type="primary"   @click="addCargo" >添加货物</el-button>
+				</div>
 			</el-main>
 		</el-container>
 	</div>

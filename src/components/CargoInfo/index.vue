@@ -9,18 +9,32 @@
 				<el-col :span="14" class="content">
 					<div class="title">{{ cargo.name }}</div>
 					<div class="description">{{ cargo.description }}</div>
-					<div style="margin-top: 50px; font-size: 18px">详细信息：</div>
-					<div class="id">商品id: {{ cargo.cargoId }}</div>
-					<el-button type="primary" class="type" round>类型： {{ cargo.type }}</el-button>
+					<el-descriptions
+						title="详细信息："
+						direction="vertical"
+						:column="3"
+						:size="size"
+						style="margin-top: 50px; font-size: 18px; text-align: center; width: 400px"
+						border
+					>
+						<el-descriptions-item label="商品id:" width="100px">
+							{{ cargo.cargoId }}
+						</el-descriptions-item>
 
-					<div class="seller">卖家： {{ cargo.seller }}</div>
-
-					<el-button type="danger" class="status" round>状态： {{ cargo.status }}</el-button>
-
-					<div class="time">
-						<div>更新时间： {{ cargo.updateAt }}</div>
-						<div>创建时间： {{ cargo.createAt }}</div>
-					</div>
+						<el-descriptions-item label="类型：" width="50px">
+							<el-button type="primary" class="type" round>{{ cargo.type }}</el-button>
+						</el-descriptions-item>
+						<el-descriptions-item label="卖家：" width="150px">{{ cargo.seller }}</el-descriptions-item>
+						<el-descriptions-item label="状态：">
+							<el-button type="danger" class="status" round>{{ cargo.status }}</el-button>
+						</el-descriptions-item>
+						<el-descriptions-item label="更新时间：" width="150px">{{
+							cargo.updateAt
+						}}</el-descriptions-item
+						><el-descriptions-item label="创建时间：" width="150px">{{
+							cargo.createAt
+						}}</el-descriptions-item>
+					</el-descriptions>
 				</el-col>
 			</el-row>
 		</el-card>
@@ -69,17 +83,15 @@ export default {
 		.id {
 			margin-top: 10px;
 		}
-		.time {
-			margin: 40px 80px 0 130px;
-		}
+
 		.type {
 			margin-top: 5px;
 			margin-bottom: 5px;
 		}
-        .seller{
-            margin-top: 5px;
-            margin-bottom: 5px;
-        }
+		.seller {
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
 		.status {
 			margin-top: 5px;
 			// background-color: red;
