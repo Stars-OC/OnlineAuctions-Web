@@ -69,6 +69,7 @@
 				</el-row>
 			</el-main>
 		</el-container>
+		
 	</div>
 </template>
 
@@ -76,6 +77,7 @@
 export default {
 	data() {
 		return {
+			dialogVisible: false,
 			user: {
 				username: 123123123123456,
 				nickname: '用户名',
@@ -87,12 +89,12 @@ export default {
 				password: '',
 				newPassword: '',
 			},
-			active: "/user/my"
+			active: '/user/my',
 		};
 	},
 	methods: {
 		toMy() {
-			this.active = "/user/my";
+			this.active = '/user/my';
 			this.$router.push('/user/my');
 		},
 		updateUser() {

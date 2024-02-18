@@ -67,6 +67,10 @@
 				</el-card>
 			</el-main>
 		</el-container>
+		<el-dialog title="商品详情" v-model="dialogVisible" width="60%" align-center>
+			<cargo-info></cargo-info>
+		</el-dialog>
+		<el-button type="primary" @click="dialogVisible = true" >查看</el-button>
 	</div>
 </template>
 
