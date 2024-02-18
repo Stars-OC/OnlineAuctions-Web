@@ -69,11 +69,11 @@
 				</el-row>
 			</el-main>
 		</el-container>
-		
 	</div>
 </template>
 
 <script>
+import axios from 'axios';
 export default {
 	data() {
 		return {
@@ -94,6 +94,7 @@ export default {
 	},
 	methods: {
 		toMy() {
+			
 			this.active = '/user/my';
 			this.$router.push('/user/my');
 		},

@@ -15,6 +15,19 @@
 					></template>
 				</el-input>
 			</el-form-item>
+			<el-form-item prop="nickname">
+				<el-input
+					v-model="registerForm.nickname"
+					type="text"
+					size="large"
+					auto-complete="off"
+					placeholder="用户名"
+				>
+					<template #prefix
+						><el-icon class="el-input__icon input-icon"><User /></el-icon
+					></template>
+				</el-input>
+			</el-form-item>
 			<el-form-item prop="password">
 				<el-input
 					v-model="registerForm.password"
@@ -42,7 +55,7 @@
 				</el-input>
 			</el-form-item>
 			<el-form-item style="width: 100%">
-				<el-button :loading="loading" size="large" type="primary" style="width: 100%">
+				<el-button :loading="loading" size="large" type="primary" style="width: 100%" @click="register">
 					<span v-if="!loading">注 册</span>
 					<span v-else>注 册 中...</span>
 				</el-button>
@@ -59,11 +72,14 @@
 </template>
 
 <script>
+import { Auth } from '@/api/request';
+import { useUserStore } from '@/store';
 export default {
 	data() {
 		return {
 			registerForm: {
 				username: '',
+				nickname: '',
 				password: '',
 				confirmPassword: '',
 			},
@@ -74,6 +90,31 @@ export default {
 				],
 			},
 		};
+	},
+	methods: {
+		register() {
+			if(this.registerForm.username == '' || this.registerForm.password == '' || this.registerForm.nickname == ''){
+				this.$message.error('用户名或密码不能为空');
+				return;
+			}
+			if(this.registerForm.password != this.registerForm.confirmPassword){
+				this.$message.error('两次密码不一致');
+				return;
+			}
+		
+			this.loading = true;
+			Auth.register(this.registerForm).then(res => {
+				var userStore = useUserStore();
+				if (res.success) {
+					userStore.saveToken(res.data);
+					this.$router.push({ name: 'login' });
+					this.$message.success(res.msg)
+				} else {
+					this.$message.error(res.msg);
+				}
+			});
+			this.loading = false;
+		},
 	},
 };
 </script>

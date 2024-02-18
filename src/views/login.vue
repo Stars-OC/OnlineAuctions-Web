@@ -17,12 +17,14 @@
 					auto-complete="off"
 					placeholder="密码"
 				>
-					<template #prefix><el-icon class="el-input__icon input-icon"><Lock /></el-icon></template>
+					<template #prefix
+						><el-icon class="el-input__icon input-icon"><Lock /></el-icon
+					></template>
 				</el-input>
 			</el-form-item>
 			<el-checkbox v-model="loginForm.rememberMe" style="margin: 0px 0px 25px 0px">记住密码</el-checkbox>
 			<el-form-item style="width: 100%">
-				<el-button :loading="loading" size="large" type="primary" style="width: 100%">
+				<el-button :loading="loading" size="large" type="primary" style="width: 100%" @click="login">
 					<span v-if="!loading">登 录</span>
 					<span v-else>登 录 中...</span>
 				</el-button>
@@ -39,9 +41,12 @@
 </template>
 
 <script>
+import { Auth } from '@/api/request';
+import { useUserStore } from '@/store';
 export default {
 	data() {
 		return {
+			loading: false,
 			register: true,
 			loginForm: {
 				username: '',
@@ -53,6 +58,29 @@ export default {
 				password: [{ required: true, trigger: 'blur', message: '密码不能为空' }],
 			},
 		};
+	},
+	methods: {
+		login() {
+			if(this.loginForm.username == '' || this.loginForm.password == ''){
+				this.$message.error('用户名或密码不能为空');
+				return;
+			}
+			this.loading = true;
+			Auth.login(this.loginForm).then(res => {
+				var userStore = useUserStore();
+				if (res.success) {
+					userStore.saveToken(res.data);
+					if (userStore.userInfo.role == 0) {
+						this.$router.push({ name: 'home' });
+					} else if (userStore.userInfo.role != null) {
+						this.$router.push({ name: 'user_manager' });
+					}
+				} else {
+					this.$message.error(res.msg);
+				}
+			});
+			this.loading = false;
+		},
 	},
 };
 </script>
