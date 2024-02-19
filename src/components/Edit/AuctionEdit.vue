@@ -63,6 +63,10 @@
 					</el-col>
 				</el-form-item>
 			</el-form>
+			<span slot="footer" class="dialog-footer">
+				<el-button type="primary" @click="onSubmit">提交</el-button>
+				<el-button @click="windowVisible = false">取消</el-button>
+			</span>
 		</div>
 	</div>
 </template>

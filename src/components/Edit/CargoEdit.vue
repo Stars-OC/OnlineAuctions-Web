@@ -28,6 +28,10 @@
 						<el-icon><Plus /></el-icon>
 					</el-upload>
 				</div>
+				<span slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="onSubmit">提交</el-button>
+                    <el-button @click="windowVisible = false">取消</el-button>
+                </span>
 				<el-dialog v-model="dialogVisible" append-to-body style="width: 40%; margin: auto">
 					<img w-full :src="dialogImageUrl" alt="Preview Image" />
 				</el-dialog>

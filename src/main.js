@@ -10,6 +10,7 @@ import MenuTitle from '@/components/MenuTitle/index.vue';
 import CargoInfo from '@/components/CargoInfo/index.vue';
 import CargoEdit from '@/components/Edit/CargoEdit.vue';
 import AuctionEdit from '@/components/Edit/AuctionEdit.vue';
+import OrderInfo from '@/components/Info/OrderInfo.vue';
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -26,5 +27,6 @@ app.component('MenuTitle', MenuTitle);
 app.component('CargoInfo', CargoInfo);
 app.component('CargoEdit', CargoEdit);
 app.component('AuctionEdit', AuctionEdit);
+app.component('OrderInfo', OrderInfo);
 
 app.mount('#app');
