@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-const TOKEN = 'userToken';
+const TOKEN = 'token';
 const token = localStorage.getItem(TOKEN);
 
 /**

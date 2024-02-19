@@ -56,7 +56,7 @@ export default {
 			orderStatusText: '', // 用于显示订单状态的文本
 		};
 	},
-	props: ['orderId']
+	props: ['orderId'],
 	created() {
 		this.setOrderTypeText();
 		this.setOrderStatusText();
@@ -106,28 +106,27 @@ export default {
 };
 </script>
 
-
 <style lang="scss" scoped>
 .order-details {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
+	max-width: 600px;
+	margin: 0 auto;
+	padding: 20px;
 }
 
 .order-card {
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .order-row {
-  margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .label {
-  font-weight: bold;
+	font-weight: bold;
 }
 
 .value {
-  color: #333;
+	color: #333;
 }
 </style>

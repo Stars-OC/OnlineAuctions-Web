@@ -79,11 +79,11 @@
 						<el-table-column label="操作" width="130px">
 							<template v-slot="scope">
 								<!-- 修改按钮 -->
-								<el-button type="primary" v-model="scope.row.Id" size="mini"
+								<el-button type="primary" v-model="scope.row.Id" size="small"
 									><el-icon><edit /></el-icon
 								></el-button>
 								<!-- 删除按钮 -->
-								<el-button type="danger" size="mini"
+								<el-button type="danger" size="small"
 									><el-icon><delete /></el-icon
 								></el-button>
 							</template>

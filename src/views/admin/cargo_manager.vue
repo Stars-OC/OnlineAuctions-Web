@@ -45,7 +45,7 @@
 								placeholder="请输入货物名称"
 								v-model="queryInfo.filter"
 								clearable
-								@clear="getUserList"
+								@clear="getList"
 							>
 								<template #append>
 									<el-button @click="search">
@@ -64,7 +64,7 @@
 							</div>
 						</el-col>
 						<el-col :span="1" :offset="6">
-							<el-button type="primary">添加货物</el-button>
+							<el-button type="primary" @click="addCargo">添加货物</el-button>
 						</el-col>
 						<!-- <el-col :span="12" style="background-color: antiquewhite">123</el-col> -->
 					</el-row>
@@ -73,9 +73,9 @@
 						<el-table-column type="index"></el-table-column>
 						<el-table-column label="展示图" prop="image">
 							<template #default="scope">
-								<div v-if="scope.row.resource.image && scope.row.resource.image.length > 0">
+								<div v-if="scope.row.resource && scope.row.resource.images">
 									<img
-										:src="scope.row.resource.image[0]"
+										:src="scope.row.resource.images[0]"
 										alt="图片"
 										style="width: 100px; height: auto"
 									/>
@@ -94,35 +94,44 @@
 						<el-table-column label="操作" width="130px">
 							<template v-slot="scope">
 								<!-- 修改按钮 -->
-								<el-button type="primary" v-model="scope.row.Id" size="mini"
-									><el-icon><edit /></el-icon
-								></el-button>
+								<el-button type="primary" @click="updateCargo(scope.row)" size="small">
+									<el-icon><edit /></el-icon>
+								</el-button>
 								<!-- 删除按钮 -->
-								<el-button type="danger" size="mini"
-									><el-icon><delete /></el-icon
-								></el-button>
+								<el-button type="danger" size="small">
+									<el-icon><delete /></el-icon>
+								</el-button>
 							</template>
 						</el-table-column>
 					</el-table>
 					<!-- 页面区域 -->
 					<el-pagination
-						:page-size="1"
-						:pager-count="15"
+						:page-size="pageInfo.limit"
+						:current-page="pageInfo.page"
 						layout="prev, pager, next"
 						:total="total"
 						style="margin: 20px 0"
+						@current-change="pageChange"
 					/> </el-card
 			></el-main>
 			<!-- </el-container> -->
 		</el-container>
+		<el-dialog title="编辑拍卖物品" v-model="dialogVisible" width="50%" append-to-body>
+			<cargo-edit :cargo="this.cargo" :operation="this.operation" @add="addEvent"></cargo-edit>
+		</el-dialog>
 	</div>
 </template>
 
 <script>
+import { Cargo } from '@/api/request';
+import DateUtils from '@/utils/DateUtils';
 export default {
 	data() {
 		return {
-			total: 10 / 15 + 1,
+			cargo: null,
+			operation: 'add',
+			dialogVisible: false,
+			total: 10 / 10,
 			queryInfo: {
 				filter: '',
 				type: '1',
@@ -136,28 +145,99 @@ export default {
 					seller: 123456,
 					time: '1706850824/1706850824',
 					resource: {
-						image: [],
-						video: [],
-					},
-					status: 0,
-				},
-				{
-					cargoId: 3,
-					name: '114514',
-					description: '123456',
-					type: '0',
-					seller: 123456,
-					time: '1706850824/1706850824',
-					resource: {
-						image: [
-							'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+						images: [
+							'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
 						],
 						video: [],
 					},
 					status: 0,
 				},
+				{
+					cargoId: 14,
+					name: '啊啊啊',
+					description: '啊啊',
+					resource: {
+						images: [
+							'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
+						],
+						videos: [],
+					},
+					type: '2',
+					seller: 123456,
+					createAt: 1708355816,
+					updateAt: 1708355816,
+					status: 0,
+				},
 			],
+			pageInfo: {
+				page: 1,
+				limit: 10,
+				filter: '',
+			},
 		};
+	},
+	mounted() {
+		Cargo.list(this.pageInfo).then(res => {
+			this.dateChange(res);
+		});
+	},
+	computed: {},
+	methods: {
+		addEvent() {
+			this.search();
+			this.dialogVisible = false;
+		},
+		getList() {
+			this.queryInfo.filter = '';
+		},
+		pageChange(num) {
+			this.pageInfo.page = num;
+			this.search();
+		},
+		search() {
+			var type = this.queryInfo.type;
+			this.pageInfo.filter = this.queryInfo.filter;
+			var pageInfo = this.pageInfo;
+
+			switch (type) {
+				case '1':
+					Cargo.list(pageInfo).then(res => {
+						this.dateChange(res);
+					});
+					break;
+				case '2':
+					Cargo.listPublished(pageInfo).then(res => {
+						this.dateChange(res);
+					});
+					break;
+				case '3':
+					Cargo.listAudit(pageInfo).then(res => {
+						this.dateChange(res);
+					});
+					break;
+			}
+			console.log(this.cargoList);
+		},
+		addCargo() {
+			this.operation = 'add';
+			this.cargoId = 0;
+			this.dialogVisible = true;
+		},
+		updateCargo(cargo) {
+			this.cargo = cargo;
+			this.operation = 'update';
+			this.dialogVisible = true;
+		},
+		dateChange(res) {
+			if (res.success) {
+				this.total = res.data.count;
+				res.data.data.forEach(item => {
+					item.time =
+						DateUtils.formatTimestamp(item.updateAt) + ' - ' + DateUtils.formatTimestamp(item.createAt);
+				});
+				this.cargoList = res.data.data;
+			}
+		},
 	},
 };
 </script>

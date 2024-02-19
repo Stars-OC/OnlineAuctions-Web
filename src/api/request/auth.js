@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axiosInstance from '@/utils/request.js';
 import Base64Utils from '@/utils/base64.js';
 
 import { ApiPath } from '../index';
@@ -15,12 +15,11 @@ const auth = {
 	login(user) {
 		return new Promise(resolve => {
 			user.password = Base64Utils.encode(user.password);
-			axios({
+			axiosInstance({
 				url: ApiPath.LOGIN,
 				method: 'POST',
 				data: user,
 			}).then(res => {
-                
 				resolve(res.data);
 			});
 		});
@@ -34,7 +33,7 @@ const auth = {
 	register(user) {
 		return new Promise(resolve => {
 			user.password = Base64Utils.encode(user.password);
-			axios({
+			axiosInstance({
 				url: ApiPath.REGISTER,
 				method: 'POST',
 				data: user,
@@ -49,7 +48,7 @@ const auth = {
 	 */
 	logoff() {
 		return new Promise(resolve => {
-			axios({
+			axiosInstance({
 				url: ApiPath.LOGOFF,
 				method: 'DELETE',
 			}).then(res => {
@@ -62,8 +61,8 @@ const auth = {
 	 * 验证 Token
 	 */
 	verify() {
-		return new Promise((resolve, reject) => {
-			axios({
+		return new Promise(resolve => {
+			axiosInstance({
 				url: ApiPath.VERIFY,
 				method: 'GET',
 			}).then(res => {
