@@ -20,7 +20,7 @@ const auth = {
 				method: 'POST',
 				data: user,
 			}).then(res => {
-				resolve(res.data);
+				resolve(res);
 			});
 		});
 	},

@@ -58,8 +58,8 @@
 							<div>
 								<el-radio-group v-model="queryInfo.type">
 									<el-radio label="1" size="large">全部</el-radio>
-									<el-radio label="2" size="large">已发布</el-radio>
-									<el-radio label="3" size="large">待审核</el-radio>
+									<el-radio label="2" size="large">待审核</el-radio>
+									<el-radio label="3" size="large">已发布</el-radio>
 								</el-radio-group>
 							</div>
 						</el-col>
@@ -90,7 +90,22 @@
 						<el-table-column label="出售者" prop="seller"></el-table-column>
 						<!-- 后面直接处理 -->
 						<el-table-column label="创建时间/修改时间" prop="time"></el-table-column>
-						<el-table-column label="状态" prop="status"></el-table-column>
+						<el-table-column label="状态">
+							<template v-slot="scope">
+								<div>
+									{{ scope.row.status }}
+									<el-button
+										style="margin-left: 20px"
+										v-if="scope.row.status == 0"
+										type="primary"
+										@click="auditCargo(scope.row)"
+										size="small"
+									>
+										<el-icon><Stamp /></el-icon>
+									</el-button>
+								</div>
+							</template>
+						</el-table-column>
 						<el-table-column label="操作" width="130px">
 							<template v-slot="scope">
 								<!-- 修改按钮 -->
@@ -116,7 +131,7 @@
 			></el-main>
 			<!-- </el-container> -->
 		</el-container>
-		<el-dialog title="编辑拍卖物品" v-model="dialogVisible" width="50%" append-to-body>
+		<el-dialog title="编辑拍卖物品" v-model="dialogVisible" width="50%" append-to-body destroy-on-close>
 			<cargo-edit :cargo="this.cargo" :operation="this.operation" @add="addEvent"></cargo-edit>
 		</el-dialog>
 	</div>
@@ -134,7 +149,7 @@ export default {
 			total: 10 / 10,
 			queryInfo: {
 				filter: '',
-				type: '1',
+				type: '2',
 			},
 			cargoList: [
 				{
@@ -177,7 +192,7 @@ export default {
 		};
 	},
 	mounted() {
-		Cargo.list(this.pageInfo).then(res => {
+		Cargo.listAudit(this.pageInfo).then(res => {
 			this.dateChange(res);
 		});
 	},
@@ -206,12 +221,12 @@ export default {
 					});
 					break;
 				case '2':
-					Cargo.listPublished(pageInfo).then(res => {
+					Cargo.listAudit(pageInfo).then(res => {
 						this.dateChange(res);
 					});
 					break;
 				case '3':
-					Cargo.listAudit(pageInfo).then(res => {
+					Cargo.listPublished(pageInfo).then(res => {
 						this.dateChange(res);
 					});
 					break;
@@ -226,6 +241,11 @@ export default {
 		updateCargo(cargo) {
 			this.cargo = cargo;
 			this.operation = 'update';
+			this.dialogVisible = true;
+		},
+		auditCargo(cargo) {
+			this.cargo = cargo;
+			this.operation = 'audit';
 			this.dialogVisible = true;
 		},
 		dateChange(res) {

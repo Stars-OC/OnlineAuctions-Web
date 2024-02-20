@@ -16,6 +16,13 @@
 				<el-form-item label="商品描述">
 					<el-input type="textarea" v-model="form.description"></el-input>
 				</el-form-item>
+				<el-form-item v-if="isAudit" label="审核状态">
+					<el-switch
+						style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+						change="auditChange"
+						v-model="audit"
+					/>
+				</el-form-item>
 				<div style="text-align: center; margin: 30px 20% 20px 20%">
 					<div style="margin-bottom: 20px; font-weight: bold; font-size: 20px">上传图片</div>
 					<el-upload
@@ -34,6 +41,9 @@
 				<el-dialog v-model="dialogVisible" append-to-body style="width: 40%; margin: auto">
 					<img w-full :src="dialogImageUrl" alt="Preview Image" />
 				</el-dialog>
+				<el-dialog v-model="auctionEdit" append-to-body style="width: 40%; margin: auto">
+					<auction-edit></auction-edit>
+				</el-dialog>
 			</el-form>
 		</div>
 	</div>
@@ -47,6 +57,9 @@ export default {
 		return {
 			dialogImageUrl: '',
 			dialogVisible: false,
+			auctionEdit: false,
+			isAudit: false,
+			audit: false,
 			fileList: [
 				{
 					name: 'food2.jpeg',
@@ -68,9 +81,7 @@ export default {
 	mounted() {
 		console.log(this.cargo);
 		console.log(this.operation);
-		if (this.operation == 'update') {
-			
-			console.log(this.fileList)
+		if (this.operation != 'add') {
 			this.dataInit(this.cargo);
 			this.imagesToFileList();
 		}
@@ -84,6 +95,7 @@ export default {
 					};
 				}
 				this.form = data;
+				if (this.operation == 'audit') this.isAudit = true;
 				console.info(data);
 			}
 		},
@@ -101,7 +113,6 @@ export default {
 			this.fileListToImages();
 			switch (this.operation) {
 				case 'add':
-					
 					Cargo.add(this.form).then(res => {
 						if (res.success) {
 							this.$message({
@@ -118,7 +129,23 @@ export default {
 					});
 					break;
 				case 'update':
-					
+					Cargo.update(this.form).then(res => {
+						if (res.success) {
+							this.$message({
+								message: '修改成功',
+								type: 'success',
+							});
+						} else {
+							this.$message({
+								message: '修改失败',
+								type: 'error',
+							});
+						}
+					});
+					break;
+				case 'audit':
+					Cargo.audit(this.form.cargoId, this.audit);
+
 					Cargo.update(this.form).then(res => {
 						if (res.success) {
 							this.$message({
@@ -136,19 +163,19 @@ export default {
 				default:
 			}
 		},
-		fileListToImages(){
-			if(this.fileList.length == 0){
-				this.form.resource.images = []
+
+		fileListToImages() {
+			if (this.fileList.length == 0) {
+				this.form.resource.images = [];
 				return;
 			}
-			for(var i = 0;i<this.fileList.length;i++){
+			for (var i = 0; i < this.fileList.length; i++) {
 				this.form.resource.images[i] = this.fileList[i].url;
 			}
-		
 		},
-		imagesToFileList(){
+		imagesToFileList() {
 			this.fileList = [];
-			for(var i = 0;i<this.form.resource.images.length;i++){
+			for (var i = 0; i < this.form.resource.images.length; i++) {
 				this.fileList[i] = {
 					name: i + '.jpeg',
 					url: this.form.resource.images[i],
