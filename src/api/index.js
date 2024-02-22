@@ -11,5 +11,10 @@ const ApiPath = {
 	CARGO_LIST: '/api/cargo/list',
 	CARGO_LIST_AUDIT: '/api/cargo/audit/list',
 	CARGO_AUDIT: '/api/cargo/audit',
+	AUCTION_ADD: '/api/auction/audit/add',
+	AUCTION_UPDATE: '/api/auction/update',
+	AUCTION_INFO: '/api/auction/info',
+	AUCTION_LIST: '/api/auction/list',
+	AUCTION_LIST_PUBLISHED: '/api/auction/published/list',
 };
 export { ApiPath };

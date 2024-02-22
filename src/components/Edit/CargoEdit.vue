@@ -16,13 +16,6 @@
 				<el-form-item label="商品描述">
 					<el-input type="textarea" v-model="form.description"></el-input>
 				</el-form-item>
-				<el-form-item v-if="isAudit" label="审核状态">
-					<el-switch
-						style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-						change="auditChange"
-						v-model="audit"
-					/>
-				</el-form-item>
 				<div style="text-align: center; margin: 30px 20% 20px 20%">
 					<div style="margin-bottom: 20px; font-weight: bold; font-size: 20px">上传图片</div>
 					<el-upload
@@ -95,7 +88,6 @@ export default {
 					};
 				}
 				this.form = data;
-				if (this.operation == 'audit') this.isAudit = true;
 				console.info(data);
 			}
 		},
@@ -129,23 +121,6 @@ export default {
 					});
 					break;
 				case 'update':
-					Cargo.update(this.form).then(res => {
-						if (res.success) {
-							this.$message({
-								message: '修改成功',
-								type: 'success',
-							});
-						} else {
-							this.$message({
-								message: '修改失败',
-								type: 'error',
-							});
-						}
-					});
-					break;
-				case 'audit':
-					Cargo.audit(this.form.cargoId, this.audit);
-
 					Cargo.update(this.form).then(res => {
 						if (res.success) {
 							this.$message({
