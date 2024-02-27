@@ -3,7 +3,7 @@ import axiosInstance from '@/utils/request.js';
 
 
 const auction = {
-	add(auction) {
+	audit(auction) {
 		return new Promise(resolve => {
 			axiosInstance({
 				url: ApiPath.AUCTION_ADD,

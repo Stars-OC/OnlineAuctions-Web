@@ -6,23 +6,23 @@
 					商品 {{ form.auction.cargoId }} 修改
 				</div>
 				<el-form-item label="商品名称">
-					<el-input v-model="form.name"></el-input>
+					<el-input v-model="form.cargo.name"></el-input>
 				</el-form-item>
 
 				<el-form-item label="商品类型">
-					<el-radio-group v-model="form.type">
+					<el-radio-group v-model="form.cargo.type">
 						<el-radio label="1">古物</el-radio>
 						<el-radio label="2">限定物品</el-radio>
 						<el-radio label="3">普通物品</el-radio>
 					</el-radio-group>
 				</el-form-item>
 				<el-form-item label="商品描述">
-					<el-input type="textarea" v-model="form.description"></el-input>
+					<el-input type="textarea" v-model="form.cargo.description"></el-input>
 				</el-form-item>
 				<el-form-item v-if="isAudit" label="审核状态">
 					<el-switch
 						style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-						change="auditChange"
+						@change="auditChange"
 						v-model="audit"
 					/>
 				</el-form-item>
@@ -45,10 +45,10 @@
 				<div style="text-align: center; margin: 10px 20% 20px 20%; font-size: 18px">拍卖场修改</div>
 
 				<el-form-item label="起拍价">
-					<el-input style="width: 30%" v-model="form.auction.startingPrice" placeholder="Please input" />
+					<el-input style="width: 30%" v-model="form.auction.startingPrice" placeholder="请输入起拍价" />
 				</el-form-item>
 				<el-form-item label="加价幅度">
-					<el-input style="width: 30%" v-model="form.auction.additionalPrice" placeholder="Please input" />
+					<el-input style="width: 30%" v-model="form.auction.additionalPrice" placeholder="请输入加价幅度" />
 				</el-form-item>
 				<el-form-item label="拍卖时间">
 					<el-col :span="8">
@@ -79,6 +79,8 @@
 </template>
 
 <script>
+import { Cargo, Auction } from '@/api/request';
+
 export default {
 	name: 'AuctionEdit',
 	data() {
@@ -117,27 +119,35 @@ export default {
 	},
 	props: ['auction', 'operation'],
 	mounted() {
-		console.log(this.auction);
-		console.log(this.operation);
-		if (this.operation == 'update') {
-			this.dataInit(this.auction);
-			this.imagesToFileList();
-		}else{
-			this.dataInit(this.auction);
-			this.imagesToFileList();
-		}
+		this.dataInit(this.auction);
 	},
 	methods: {
 		dataInit(data) {
-			if (data) {
+			console.log(data);
+			if (data.auctionId) {
+				Cargo.info(data.cargoId).then(res => {
+					if (!res.data.resource) {
+						res.data.resource = {
+							images: [],
+						};
+					}
+
+					this.form.action = data;
+					this.form.cargo = res.data;
+
+					this.imagesToFileList();
+				});
+
+				console.info(this.form);
+			} else if (this.operation == 'audit') {
 				if (!data.resource) {
 					data.resource = {
 						images: [],
 					};
 				}
-				this.form = data;
-				if (this.operation == 'audit') this.isAudit = true;
-				console.info(data);
+				this.isAudit = true;
+				this.form.cargo = data;
+				this.form.auction = {};
 			}
 		},
 		handleRemove(uploadFile, uploadFiles) {
@@ -153,24 +163,8 @@ export default {
 		onSubmit() {
 			this.fileListToImages();
 			switch (this.operation) {
-				case 'add':
-					Cargo.add(this.form).then(res => {
-						if (res.success) {
-							this.$message({
-								message: '添加成功',
-								type: 'success',
-							});
-							this.$emit('add', this.form);
-						} else {
-							this.$message({
-								message: '添加失败',
-								type: 'error',
-							});
-						}
-					});
-					break;
 				case 'update':
-					Cargo.update(this.form).then(res => {
+					Auction.update(this.form).then(res => {
 						if (res.success) {
 							this.$message({
 								message: '修改成功',
@@ -185,9 +179,7 @@ export default {
 					});
 					break;
 				case 'audit':
-					Cargo.audit(this.form.cargoId, this.audit);
-
-					Cargo.update(this.form).then(res => {
+					Auction.audit(this.form).then(res => {
 						if (res.success) {
 							this.$message({
 								message: '修改成功',
@@ -223,6 +215,9 @@ export default {
 				};
 			}
 		},
+		auditChange() {
+			Cargo.audit(this.form.cargo.cargoId, this.audit);
+		},
 	},
 };
 </script>
@@ -232,5 +227,9 @@ export default {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
+	.dialog-footer {
+		margin-top: 20px;
+		float: right;
+	}
 }
 </style>

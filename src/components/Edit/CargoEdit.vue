@@ -166,5 +166,9 @@ export default {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
+	.dialog-footer {
+		margin-top: 20px;
+		float: right;
+	}
 }
 </style>

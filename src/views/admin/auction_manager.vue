@@ -42,7 +42,7 @@
 						<el-col :span="5"> </el-col>
 						<el-col :span="6" :offset="5">
 							<div>
-								<el-radio-group v-model="queryInfo.type">
+								<el-radio-group v-model="queryInfo.type" @change="typeView">
 									<el-radio label="1" size="large">全部</el-radio>
 									<el-radio label="2" size="large">已发布</el-radio>
 								</el-radio-group>
@@ -79,38 +79,51 @@
 						<el-table-column label="操作" width="130px">
 							<template v-slot="scope">
 								<!-- 修改按钮 -->
-								<el-button type="primary" v-model="scope.row.Id" size="small"
-									><el-icon><edit /></el-icon
-								></el-button>
+								<el-button type="primary" @click="updateAuction(scope.row)" size="small">
+									<el-icon><edit /></el-icon>
+								</el-button>
 								<!-- 删除按钮 -->
-								<el-button type="danger" size="small"
-									><el-icon><delete /></el-icon
-								></el-button>
+								<el-button type="danger" size="small">
+									<el-icon><delete /></el-icon>
+								</el-button>
 							</template>
 						</el-table-column>
 					</el-table>
 					<!-- 页面区域 -->
 					<el-pagination
-						:page-size="1"
-						:pager-count="15"
+						:page-size="pageInfo.limit"
+						:current-page="pageInfo.page"
 						layout="prev, pager, next"
 						:total="total"
 						style="margin: 20px 0"
+						@current-change="pageChange"
 					/> </el-card
 			></el-main>
 			<!-- </el-container> -->
 		</el-container>
+		<el-dialog title="编辑拍卖" v-model="dialogVisible" width="50%" append-to-body destroy-on-close>
+			<auction-edit :auction="this.auction" :operation="this.operation" @add="addEvent"></auction-edit>
+		</el-dialog>
 	</div>
 </template>
 
 <script>
+import { Auction } from '@/api/request';
+import DateUtils from '@/utils/DateUtils';
 export default {
 	data() {
 		return {
-			total: 10 / 15 + 1,
+			total: 10 / 10,
+			auction: {},
+			operation: 'update',
+			dialogVisible: false,
 			queryInfo: {
-				filter: '',
 				type: '1',
+			},
+			pageInfo: {
+				page: 1,
+				limit: 10,
+				filter: '',
 			},
 			auctionList: [
 				{
@@ -133,6 +146,46 @@ export default {
 				},
 			],
 		};
+	},
+	mounted() {
+		Auction.list(this.pageInfo).then(res => {
+			this.dateChange(res);
+		});
+	},
+	methods: {
+		updateAuction(auction) {
+			this.auction = auction;
+			this.operation = 'update';
+			this.dialogVisible = true;
+		},
+		dateChange(res) {
+			if (res.success) {
+				this.total = res.data.count;
+				res.data.data.forEach(item => {
+					item.time =
+						DateUtils.formatTimestamp(item.startTime) + ' - ' + DateUtils.formatTimestamp(item.endTime);
+				});
+				this.auctionList = res.data.data;
+			}
+		},
+		typeView(){
+			switch(this.queryInfo.type){
+				case '1':
+					Auction.list(this.pageInfo).then(res => {
+						this.dateChange(res);
+					});
+					break;
+				case '2':
+					Auction.listPublished(this.pageInfo).then(res => {
+						this.dateChange(res);
+					});
+					break;
+			}
+		},
+		pageChange(num) {
+			this.pageInfo.page = num;
+			this.typeView();
+		},
 	},
 };
 </script>
