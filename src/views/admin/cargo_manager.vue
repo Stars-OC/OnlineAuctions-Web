@@ -132,8 +132,9 @@
 			<!-- </el-container> -->
 		</el-container>
 		<el-dialog title="编辑拍卖物品" v-model="dialogVisible" width="50%" append-to-body destroy-on-close>
-			<cargo-edit v-if="isAudit" :cargo="this.cargo" :operation="this.operation" @add="addEvent"></cargo-edit>
-			<auction-edit v-else :auction="this.cargo" operation="audit" ></auction-edit>
+			<cargo-edit v-if="!isAudit" :cargo="this.cargo" :operation="this.operation" @add="addEvent"></cargo-edit>
+
+			<auction-edit v-else :auction="this.cargo" operation="audit"></auction-edit>
 		</el-dialog>
 	</div>
 </template>
@@ -241,11 +242,13 @@ export default {
 			this.dialogVisible = true;
 		},
 		updateCargo(cargo) {
+			this.isAudit = false;
 			this.cargo = cargo;
 			this.operation = 'update';
 			this.dialogVisible = true;
 		},
 		auditCargo(cargo) {
+			this.isAudit = true;
 			this.cargo = cargo;
 			this.operation = 'audit';
 			this.dialogVisible = true;

@@ -55,9 +55,7 @@
 							</el-input>
 						</el-col>
 						<el-col :span="6" :offset="5"> </el-col>
-						<el-col :span="1" :offset="6">
-							<el-button type="primary">添加用户</el-button>
-						</el-col>
+
 						<!-- <el-col :span="12" style="background-color: antiquewhite">123</el-col> -->
 					</el-row>
 					<!-- 用户列表区域  -->
@@ -105,11 +103,12 @@
 					</el-table>
 					<!-- 页面区域 -->
 					<el-pagination
-						:page-size="1"
-						:pager-count="15"
+						:page-size="pageInfo.limit"
+						:current-page="pageInfo.page"
 						layout="prev, pager, next"
 						:total="total"
 						style="margin: 20px 0"
+						@current-change="pageChange"
 					/> </el-card
 			></el-main>
 			<!-- </el-container> -->
@@ -118,13 +117,19 @@
 </template>
 
 <script>
+import { User } from '@/api/request';
 export default {
 	data() {
 		return {
-			total: 10 / 15 + 1,
+			total: 10 / 10 ,
 			queryInfo: {
 				filter: '',
 				type: '1',
+			},
+			pageInfo: {
+				page: 1,
+				limit: 10,
+				filter: '',
 			},
 			userList: [
 				{
@@ -146,6 +151,34 @@ export default {
 				},
 			],
 		};
+	},
+	mounted() {
+		User.list(this.pageInfo).then(res => {
+			this.dateChange(res);
+		});
+	},
+
+	methods: {
+		pageChange(num) {
+			this.pageInfo.page = num;
+			this.search();
+		},
+		dateChange(res) {
+			if (res.success) {
+				this.total = res.data.count;
+				this.userList = res.data.data;
+			}
+		},
+		search() {
+			this.pageInfo.filter = this.queryInfo.filter;
+			User.list(this.pageInfo).then(res => {
+				this.dateChange(res);
+			});
+		},
+		getUserList() {
+			this.search();
+			this.queryInfo.filter = '';
+		},
 	},
 };
 </script>

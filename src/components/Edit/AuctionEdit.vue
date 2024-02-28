@@ -126,14 +126,14 @@ export default {
 			console.log(data);
 			if (data.auctionId) {
 				Cargo.info(data.cargoId).then(res => {
-					if (!res.data.resource) {
-						res.data.resource = {
+					if (!res.resource) {
+						res.resource = {
 							images: [],
 						};
 					}
 
-					this.form.action = data;
-					this.form.cargo = res.data;
+					this.form.auction = data;
+					this.form.cargo = res;
 
 					this.imagesToFileList();
 				});
@@ -199,19 +199,19 @@ export default {
 
 		fileListToImages() {
 			if (this.fileList.length == 0) {
-				this.form.resource.images = [];
+				this.form.cargo.resource.images = [];
 				return;
 			}
 			for (var i = 0; i < this.fileList.length; i++) {
-				this.form.resource.images[i] = this.fileList[i].url;
+				this.form.cargo.resource.images[i] = this.fileList[i].url;
 			}
 		},
 		imagesToFileList() {
 			this.fileList = [];
-			for (var i = 0; i < this.form.resource.images.length; i++) {
+			for (var i = 0; i < this.form.cargo.resource.images.length; i++) {
 				this.fileList[i] = {
 					name: i + '.jpeg',
-					url: this.form.resource.images[i],
+					url: this.form.cargo.resource.images[i],
 				};
 			}
 		},

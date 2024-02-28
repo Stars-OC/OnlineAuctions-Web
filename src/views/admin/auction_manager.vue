@@ -58,7 +58,7 @@
 						<el-table-column label="货物id">
 							<template v-slot="scope">
 								{{ scope.row.cargoId }}
-								<el-button type="text" size="large">
+								<el-button type="text" size="large" @click="checkCargoInfo(scope.row.cargoId)">
 									<el-icon><Link /></el-icon>
 								</el-button>
 							</template>
@@ -74,8 +74,8 @@
 							</template>
 						</el-table-column>
 						<!-- 后面直接处理 -->
-						<el-table-column label="开始时间/结束时间" prop="time"></el-table-column>
-						<el-table-column label="状态" prop="status"></el-table-column>
+						<el-table-column label="开始时间/结束时间" prop="time" width="300px"></el-table-column>
+						<el-table-column label="状态" prop="status" width="50px"></el-table-column>
 						<el-table-column label="操作" width="130px">
 							<template v-slot="scope">
 								<!-- 修改按钮 -->
@@ -104,6 +104,9 @@
 		<el-dialog title="编辑拍卖" v-model="dialogVisible" width="50%" append-to-body destroy-on-close>
 			<auction-edit :auction="this.auction" :operation="this.operation" @add="addEvent"></auction-edit>
 		</el-dialog>
+		<el-dialog title="查看拍卖物品" v-model="cargoInfo" width="60%" append-to-body destroy-on-close>
+			<cargo-info :cargoId="cargoId"></cargo-info>
+		</el-dialog>
 	</div>
 </template>
 
@@ -117,6 +120,8 @@ export default {
 			auction: {},
 			operation: 'update',
 			dialogVisible: false,
+			cargoInfo: false,
+			cargoId: null,
 			queryInfo: {
 				type: '1',
 			},
@@ -156,6 +161,7 @@ export default {
 		updateAuction(auction) {
 			this.auction = auction;
 			this.operation = 'update';
+			this.cargoInfo = false;
 			this.dialogVisible = true;
 		},
 		dateChange(res) {
@@ -164,12 +170,14 @@ export default {
 				res.data.data.forEach(item => {
 					item.time =
 						DateUtils.formatTimestamp(item.startTime) + ' - ' + DateUtils.formatTimestamp(item.endTime);
+					item.startTime *= 1000;
+					item.endTime *= 1000; 
 				});
 				this.auctionList = res.data.data;
 			}
 		},
-		typeView(){
-			switch(this.queryInfo.type){
+		typeView() {
+			switch (this.queryInfo.type) {
 				case '1':
 					Auction.list(this.pageInfo).then(res => {
 						this.dateChange(res);
@@ -185,6 +193,10 @@ export default {
 		pageChange(num) {
 			this.pageInfo.page = num;
 			this.typeView();
+		},
+		checkCargoInfo(cargoId) {
+			this.cargoId = cargoId;
+			this.cargoInfo = true;
 		},
 	},
 };
