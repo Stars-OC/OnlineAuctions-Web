@@ -55,8 +55,9 @@
 						<el-date-picker
 							placeholder="开始时间"
 							type="datetime"
-							v-model="form.auction.startTime"
+							v-model="startTime"
 							style="width: 100%"
+							@change="handleStartTime"
 						/>
 					</el-col>
 					<el-col :span="1" style="margin-left: 30px"> -</el-col>
@@ -64,15 +65,16 @@
 						<el-date-picker
 							placeholder="结束时间"
 							type="datetime"
-							v-model="form.auction.endTime"
+							v-model="endTime"
 							style="width: 100%"
+							@change="handleEndTime"
 						/>
 					</el-col>
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
 				<el-button type="primary" @click="onSubmit">提交</el-button>
-				<el-button @click="windowVisible = false">取消</el-button>
+				<el-button @click="close">取消</el-button>
 			</span>
 		</div>
 	</div>
@@ -85,6 +87,8 @@ export default {
 	name: 'AuctionEdit',
 	data() {
 		return {
+			startTime: 0,
+			endTime: 0,
 			form: {
 				cargo: {
 					name: '',
@@ -133,6 +137,8 @@ export default {
 					}
 
 					this.form.auction = data;
+					this.startTime = data.startTime ;
+					this.endTime = data.endTime;
 					this.form.cargo = res;
 
 					this.imagesToFileList();
@@ -195,6 +201,7 @@ export default {
 					break;
 				default:
 			}
+			this.close();
 		},
 
 		fileListToImages() {
@@ -218,6 +225,15 @@ export default {
 		auditChange() {
 			Cargo.audit(this.form.cargo.cargoId, this.audit);
 		},
+		handleStartTime(date){
+			this.form.auction.startTime = date.getTime()/1000;
+		},
+		handleEndTime(date){
+			this.form.auction.endTime = date.getTime()/1000;
+		},
+		close(){
+			this.$emit('close');
+		}
 	},
 };
 </script>

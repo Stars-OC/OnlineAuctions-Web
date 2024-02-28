@@ -118,10 +118,11 @@
 
 <script>
 import { User } from '@/api/request';
+import DateUtils from '@/utils/DateUtils';
 export default {
 	data() {
 		return {
-			total: 10 / 10 ,
+			total: 10 / 10,
 			queryInfo: {
 				filter: '',
 				type: '1',
@@ -163,9 +164,13 @@ export default {
 			this.pageInfo.page = num;
 			this.search();
 		},
+
 		dateChange(res) {
 			if (res.success) {
 				this.total = res.data.count;
+				res.data.data.forEach(item => {
+					item.time = DateUtils.formatTimestamp(item.createAt);
+				});
 				this.userList = res.data.data;
 			}
 		},

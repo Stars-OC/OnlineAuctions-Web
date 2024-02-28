@@ -102,10 +102,10 @@
 			<!-- </el-container> -->
 		</el-container>
 		<el-dialog title="编辑拍卖" v-model="dialogVisible" width="50%" append-to-body destroy-on-close>
-			<auction-edit :auction="this.auction" :operation="this.operation" @add="addEvent"></auction-edit>
+			<auction-edit :auction="this.auction" :operation="this.operation" @close="closeAuction"></auction-edit>
 		</el-dialog>
 		<el-dialog title="查看拍卖物品" v-model="cargoInfo" width="60%" append-to-body destroy-on-close>
-			<cargo-info :cargoId="cargoId"></cargo-info>
+			<cargo-info :cargoId="cargoId" @close="closeCargo"></cargo-info>
 		</el-dialog>
 	</div>
 </template>
@@ -198,6 +198,13 @@ export default {
 			this.cargoId = cargoId;
 			this.cargoInfo = true;
 		},
+		closeCargo(){
+			this.cargoInfo = false;
+		},
+		closeAuction(){
+			this.dialogVisible = false;
+			this.typeView();
+		}
 	},
 };
 </script>

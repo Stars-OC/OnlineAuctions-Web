@@ -111,7 +111,6 @@ export default {
 								message: '添加成功',
 								type: 'success',
 							});
-							this.$emit('add', this.form);
 						} else {
 							this.$message({
 								message: '添加失败',
@@ -137,6 +136,7 @@ export default {
 					break;
 				default:
 			}
+			this.close();
 		},
 
 		fileListToImages() {
@@ -157,6 +157,9 @@ export default {
 				};
 			}
 		},
+		close(){
+			this.$emit('close');
+		}
 	},
 };
 </script>
