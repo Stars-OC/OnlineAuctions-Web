@@ -21,5 +21,14 @@ const ApiPath = {
 	AUCTION_INFO: '/api/auction/info',
 	AUCTION_LIST: '/api/auction/list',
 	AUCTION_LIST_PUBLISHED: '/api/auction/published/list',
+	AUCTION_OPERATION_INFO: '/api/auction/operation/info',
+	AUCTION_OPERATION_ADD: '/api/auction/operation/add',
+	AUCTION_LOG_INFO: '/api/auction/info/log',
+	ORDER_INFO: '/api/order/info',
+	ORDER_LIST: '/api/order/user/list',
+	ORDER_CANCEL: '/api/order/user/cancel',
+	ORDER_PAY: '/api/order/user/pay',
+	FILE_UPLOAD: '/api/file/upload',
+	FILE_UPLOAD_AVATAR: '/api/file/upload/avatar',
 };
 export { ApiPath };

@@ -59,4 +59,54 @@ const user = {
 	},
     
 };
-export default user;
+
+const order = {
+	info(orderId){
+		return new Promise(resolve => {
+			axiosInstance({
+				url: ApiPath.ORDER_INFO + '/' + orderId,
+				method: 'GET',
+				params: info,
+			}).then(res => {
+				resolve(res);
+			});
+		});
+	},
+	list(pageInfo) {
+		return new Promise(resolve => {
+			axiosInstance({
+				url: ApiPath.ORDER_LIST,
+				method: 'GET',
+				params: pageInfo,
+			}).then(res => {
+				resolve(res);
+			});
+		});
+	},
+	pay(order) {
+		return new Promise(resolve => {
+			axiosInstance({
+				url: ApiPath.ORDER_PAY,
+				method: 'POST',
+				data: order,
+			}).then(res => {
+				resolve(res);
+			});
+		});
+	},
+	cancel(orderId) {
+		return new Promise(resolve => {
+			axiosInstance({
+				url: ApiPath.ORDER_CANCEL + '/' + orderId,
+				method: 'POST',
+			}).then(res => {
+				resolve(res);
+			});
+		});
+	},
+};
+
+export default {
+	user,
+	order,
+};

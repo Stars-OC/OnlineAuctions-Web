@@ -17,11 +17,8 @@
 				</div>
 				<div class="banner">
 					<el-carousel trigger="click" height="300px">
-						<el-carousel-item v-for="item in 4" :key="item">
-							<img
-								src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-								class="image"
-							/>
+						<el-carousel-item v-for="item in banners" :key="item">
+							<img :src="item" class="image" />
 							<h3 class="small justify-center" text="2xl">{{ item }}</h3>
 						</el-carousel-item>
 					</el-carousel>
@@ -80,6 +77,11 @@ export default {
 			queryInfo: {
 				query: '',
 			},
+			banners: [
+				'https://imgqn.epailive.com/cloud_60_ad_1709004506077.png',
+				'https://imgqnb.epailive.com/cloud_60_ad_1709083841211.jpg',
+				'https://imgqna.epailive.com/cloud_60_ad_1708767666782.png',
+			],
 		};
 	},
 };

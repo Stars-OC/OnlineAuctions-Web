@@ -46,12 +46,18 @@ const auction = {
 			});
 		});
 	},
-    listPublished(pageInfo) {
+    listPublished(pageInfo,type) {
+		if(type){
+			type = {
+				type: type
+			}
+		}
 		return new Promise(resolve => {
 			axiosInstance({
 				url: ApiPath.AUCTION_LIST_PUBLISHED,
 				method: 'GET',
 				params: pageInfo,
+				params: type,
 			}).then(res => {
 				resolve(res);
 			});

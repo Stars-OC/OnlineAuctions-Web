@@ -119,6 +119,7 @@
 <script>
 import { User } from '@/api/request';
 import DateUtils from '@/utils/DateUtils';
+const user = User.user;
 export default {
 	data() {
 		return {
@@ -154,9 +155,10 @@ export default {
 		};
 	},
 	mounted() {
-		User.list(this.pageInfo).then(res => {
+		user.list(this.pageInfo).then(res => {
 			this.dateChange(res);
 		});
+		
 	},
 
 	methods: {
@@ -176,7 +178,7 @@ export default {
 		},
 		search() {
 			this.pageInfo.filter = this.queryInfo.filter;
-			User.list(this.pageInfo).then(res => {
+			user.list(this.pageInfo).then(res => {
 				this.dateChange(res);
 			});
 		},
