@@ -1,5 +1,5 @@
 <template>
-	<div class="common-layout">
+	<div class="main">
 		<menu-title></menu-title>
 		<el-container>
 			<el-header>
@@ -28,17 +28,16 @@
 				<div class="auction">
 					<h2>精选专场</h2>
 					<el-row :gutter="20">
-						<el-col :span="6" v-for="(o, index) in 4" :key="index">
+						<el-col :span="6" v-for="index in cargoList.slice(0, 4)" :key="index">
 							<el-card :body-style="{ padding: '0px' }">
-								<img
-									src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-									class="image"
-								/>
+								<img :src="index.resource.images[0]" class="image" />
 								<div style="padding: 14px">
-									<span>{{ time }}</span>
+									<span>{{ index.name }}</span>
 									<div class="bottom">
-										<time class="time">114514</time>
-										<el-button text class="button">点击查看</el-button>
+										<time class="time">{{ index.time }}</time>
+										<el-button text class="button" @click="checkCargoInfo(index.cargoId)"
+											>点击查看</el-button
+										>
 									</div>
 								</div>
 							</el-card>
@@ -47,23 +46,22 @@
 
 					<h2>历史好品</h2>
 					<el-row :gutter="20">
-						<el-col :span="8" v-for="(o, index) in 3" :key="index">
+						<el-col :span="8" v-for="index in cargoList.slice(4, 7)" :key="index">
 							<el-card :body-style="{ padding: '0px' }">
-								<img
-									src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-									class="image"
-								/>
+								<img :src="index.resource.images[0]" class="image" style="height: 400px" />
 								<div style="padding: 14px">
-									<span>{{ time }}</span>
+									<span>{{ index.name }}</span>
 									<div class="bottom">
-										<time class="time">{{ currentDate }}</time>
-										<el-button text class="button">点击查看</el-button>
+										<time class="time">{{ index.time }}</time>
+										<el-button text class="button" @click="checkCargoInfo(index.cargoId)"
+											>点击查看</el-button
+										>
 									</div>
 								</div>
 							</el-card>
 						</el-col>
 					</el-row>
-					<el-button text class="more">更多拍卖 点击查看</el-button>
+					<el-button text class="more" @click="toMore">更多拍卖 点击查看</el-button>
 				</div>
 			</el-main>
 		</el-container>
@@ -71,6 +69,9 @@
 </template>
 
 <script>
+import { Cargo, Auction } from '@/api/request';
+import router from '@/router';
+import DateUtils from '@/utils/DateUtils';
 export default {
 	data() {
 		return {
@@ -82,7 +83,41 @@ export default {
 				'https://imgqnb.epailive.com/cloud_60_ad_1709083841211.jpg',
 				'https://imgqna.epailive.com/cloud_60_ad_1708767666782.png',
 			],
+			cargoList: [],
 		};
+	},
+	mounted() {
+		Cargo.listPublished().then(res => {
+			this.dateChange(res);
+		});
+	},
+	methods: {
+		dateChange(res) {
+			if (res.success) {
+				res.data.data.forEach(item => {
+					if (!item.resource || item.resource.images.length == 0) {
+						item.resource = {
+							images: ['https://imgqna.epailive.com/cloud_40_78518_1708841542534.jpg'],
+						};
+					}
+					item.time = DateUtils.formatTimestamp(item.createAt);
+				});
+				this.cargoList = res.data.data;
+				console.log(this.cargoList);
+			}
+		},
+		checkCargoInfo(cargoId) {
+			Auction.infoByCargoId(cargoId).then(res => {
+				if (res.success) {
+					router.push({
+						path: '/auction/info/' + res.data.auctionId,
+					});
+				}
+			});
+		},
+		toMore() {
+			router.push({ name: 'auction_list' });
+		},
 	},
 };
 </script>
@@ -146,6 +181,7 @@ export default {
 
 		.image {
 			width: 100%;
+			height: 300px;
 			display: block;
 		}
 		.more {

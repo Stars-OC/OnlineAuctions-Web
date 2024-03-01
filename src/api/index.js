@@ -19,6 +19,7 @@ const ApiPath = {
 	AUCTION_ADD: '/api/auction/audit/add',
 	AUCTION_UPDATE: '/api/auction/update',
 	AUCTION_INFO: '/api/auction/info',
+	AUCTION_INFO_BY_CARGOID: '/api/auction/info/cargo',
 	AUCTION_LIST: '/api/auction/list',
 	AUCTION_LIST_PUBLISHED: '/api/auction/published/list',
 	AUCTION_OPERATION_INFO: '/api/auction/operation/info',

@@ -35,6 +35,16 @@ const auction = {
 			});
 		});
 	},
+	infoByCargoId(cargoId) {
+		return new Promise(resolve => {
+			axiosInstance({
+				url: ApiPath.AUCTION_INFO_BY_CARGOID + '/' + cargoId,
+				method: 'GET',
+			}).then(res => {
+				resolve(res);
+			});
+		});
+	},
     list(pageInfo) {
 		return new Promise(resolve => {
 			axiosInstance({
