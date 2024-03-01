@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { Auction } from '@/api/request';
 export default {
 	data() {
 		return {
@@ -59,6 +60,9 @@ export default {
 			],
 			total: 10 / 15 + 1,
 		};
+	},
+	mounted() {
+		
 	},
 	methods: {
 		toMy() {

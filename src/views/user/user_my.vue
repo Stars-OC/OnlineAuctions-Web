@@ -40,6 +40,9 @@
 </template>
 
 <script>
+import { useUserStore } from '@/store';
+import DateUtils from '@/utils/DateUtils';
+var userStore = useUserStore();
 export default {
 	data() {
 		return {
@@ -55,6 +58,11 @@ export default {
 				newPassword: '',
 			},
 		};
+	},
+	mounted() {
+		
+		this.user = userStore.userInfo;
+		this.user.createAt = DateUtils.formatTimestamp(userStore.userInfo.createAt);
 	},
 	methods: {
 		toMy() {

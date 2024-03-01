@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import { useUserStore } from '@/store';
+var userStore = useUserStore();
 export default {
 	data() {
 		return {
