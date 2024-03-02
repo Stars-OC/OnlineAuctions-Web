@@ -37,7 +37,7 @@ const cargo = {
 				url: ApiPath.CARGO_INFO + '/' + cargoId,
 				method: 'GET',
 			}).then(res => {
-				resolve(res.data);
+				resolve(res);
 			});
 		});
 	},

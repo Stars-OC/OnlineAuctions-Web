@@ -31,7 +31,7 @@
 			</el-row>
 			<el-row>
 				<el-col :span="8">创建时间:</el-col>
-				<el-col :span="16">{{ formatDate(orderInfo.createAt) }}</el-col>
+				<el-col :span="16">{{ orderInfo.createAt }}</el-col>
 			</el-row>
 		</el-card>
 	</div>
@@ -41,7 +41,6 @@
 export default {
 	data() {
 		return {
-			orderId: this.$route.params.id,
 			orderInfo: {
 				orderId: 10,
 				cargoId: 4,
@@ -56,10 +55,13 @@ export default {
 			orderStatusText: '', // 用于显示订单状态的文本
 		};
 	},
-	props: ['orderId'],
+	props: ['order'],
 	created() {
 		this.setOrderTypeText();
 		this.setOrderStatusText();
+	},
+	mounted() {
+		this.orderInfo = this.order;
 	},
 	methods: {
 		setOrderTypeText() {
@@ -96,12 +98,7 @@ export default {
 				default:
 					this.orderStatusText = '未知状态';
 			}
-		},
-		formatDate(timestamp) {
-			// 格式化时间戳
-			const date = new Date(timestamp * 1000); // 注意要将秒转换为毫秒
-			return date.toLocaleString();
-		},
+		}
 	},
 };
 </script>

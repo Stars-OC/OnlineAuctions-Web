@@ -1,7 +1,6 @@
 <template>
 	<div class="body">
 		<el-card>
-			
 			<el-row :gutter="20">
 				<el-col :span="7">
 					<!-- {{ cargoId }} -->
@@ -43,6 +42,8 @@
 </template>
 
 <script>
+import { Cargo } from '@/api/request';
+import DateUtils from '@/utils/DateUtils';
 export default {
 	name: 'CargoInfo',
 	data() {
@@ -65,10 +66,25 @@ export default {
 			},
 		};
 	},
-	created(){
-		console.log(this.cargoId)
+	mounted() {
+		Cargo.info(this.cargoId).then(res => {
+			console.log(res);
+			if (res.success) {
+				if (!res.data.resource || res.data.resource.images.length == 0) {
+					res.data.resource = {
+						images: [
+							'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+						],
+					};
+				}
+				res.data.createAt = DateUtils.formatTimestamp(res.data.createAt);
+				res.data.updateAt = DateUtils.formatTimestamp(res.data.updateAt);
+				this.image = res.data.resource.images[0];
+				this.cargo = res.data;
+			}
+		});
 	},
-	props: ['cargoId']
+	props: ['cargoId'],
 };
 </script>
 

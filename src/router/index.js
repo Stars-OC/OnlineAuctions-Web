@@ -45,16 +45,6 @@ const router = createRouter({
 			component: () => import('../views/cargo/cargo_info.vue'),
 		},
 		{
-			path: '/auction/edit/:operation/:id',
-			name: 'auction_edit',
-			component: () => import('../views/auction/auction_edit.vue'),
-		},
-		{
-			path: '/cargo/edit/:operation/:id',
-			name: 'cargo_edit',
-			component: () => import('../views/cargo/cargo_edit.vue'),
-		},
-		{
 			path: '/order/paid/:id',
 			name: 'order_paid',
 			component: () => import('../views/order/order_paid.vue'),

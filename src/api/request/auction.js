@@ -83,6 +83,38 @@ const auction = {
 			});
 		});
 	},
+	operationInfo(auctionId) {
+		return new Promise(resolve => {
+			axiosInstance({
+				url: ApiPath.AUCTION_OPERATION_INFO + '/' + auctionId,
+				method: 'GET',
+			}).then(res => {
+				resolve(res);
+			});
+		});
+	},
+	operationAdd(addOperation) {
+		return new Promise(resolve => {
+			axiosInstance({
+				url: ApiPath.AUCTION_OPERATION_ADD,
+				method: 'POST',
+				data: addOperation,
+			}).then(res => {
+				resolve(res);
+			});
+		});
+	},
+	auctionLogs(auctionId, pageInfo) {
+		return new Promise(resolve => {
+			axiosInstance({
+				url: ApiPath.AUCTION_LOG_INFO + '/' + auctionId,
+				method: 'GET',
+				params: pageInfo,
+			}).then(res => {
+				resolve(res);
+			});
+		});
+	},
 };
 
 export default auction;

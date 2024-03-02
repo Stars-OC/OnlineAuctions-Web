@@ -13,7 +13,7 @@
 					<el-table-column prop="status" label="状态" />
 					<el-table-column fixed="right" label="操作">
 						<template #default="scope">
-							<el-button link type="primary" size="small">查看</el-button>
+							<el-button link type="primary" size="small" @click="checkOrder(scope.row)">查看</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -29,6 +29,9 @@
 				/>
 			</el-main>
 		</el-container>
+		<el-dialog title="查看订单信息" v-model="dialogVisible" width="50%" append-to-body destroy-on-close>
+			<order-info :order="order" ></order-info>
+		</el-dialog>
 	</div>
 </template>
 
@@ -41,6 +44,8 @@ const order = User.order;
 export default {
 	data() {
 		return {
+			order: {},
+			dialogVisible: false,
 			orderList: [
 				{
 					orderId: 7,
@@ -83,6 +88,10 @@ export default {
 		toMy() {
 			this.$router.push('/user/my');
 		},
+		checkOrder(order){
+			this.order = order;
+			this.dialogVisible = true;
+		}
 	},
 };
 </script>
