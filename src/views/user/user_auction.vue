@@ -3,7 +3,7 @@
 		<el-container>
 			<el-main class="main">
 				<el-table :data="auctionList" stripe style="width: 100%">
-					<el-table-column fixed prop="startTime" label="时间" width="150" />
+					<el-table-column fixed prop="startTime" label="时间" width="200" />
 					<el-table-column prop="auctionId" label="拍卖场id" />
 					<el-table-column prop="cargoId" label="货物id" />
 					<el-table-column prop="startingPrice" label="起拍价" />
@@ -16,26 +16,41 @@
 							<div v-else>暂未出售</div>
 						</template>
 					</el-table-column>
-					<el-table-column prop="endTime" label="结束时间" />
+					<el-table-column prop="endTime" label="结束时间" width="200" />
 
 					<el-table-column prop="status" label="状态" />
 					<el-table-column fixed="right" label="操作">
 						<template #default="scope">
-							<el-button link type="primary" size="small" >查看</el-button>
+							<el-button link type="primary" size="small">查看</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
-				<el-pagination small background layout="prev, pager, next" :total="total" />
+				<el-pagination
+					:page-size="pageInfo.limit"
+					:current-page="pageInfo.page"
+					layout="prev, pager, next"
+					:total="total"
+					style="margin: 20px 0"
+					@current-change="pageChange"
+					small
+					background
+				/>
 			</el-main>
 		</el-container>
 	</div>
 </template>
 
 <script>
+import DateUtils from '@/utils/DateUtils';
 import { Auction } from '@/api/request';
 export default {
 	data() {
 		return {
+			pageInfo: {
+				page: 1,
+				limit: 10,
+				filter: '',
+			},
 			auctionList: [
 				{
 					auctionId: 3,
@@ -58,13 +73,33 @@ export default {
 					status: 2,
 				},
 			],
-			total: 10 / 15 + 1,
+			total: 10 / 10,
 		};
 	},
 	mounted() {
-		
+		this.typeView();
 	},
 	methods: {
+		dateChange(res) {
+			if (res.success) {
+				console.log(res);
+				this.total = res.data.count;
+				res.data.data.forEach(item => {
+					item.startTime = DateUtils.formatTimestamp(item.startTime);
+					item.endTime = DateUtils.formatTimestamp(item.endTime);
+				});
+				this.auctionList = res.data.data;
+			}
+		},
+		typeView() {
+			Auction.userList(this.pageInfo).then(res => {
+				this.dateChange(res);
+			});
+		},
+		pageChange(num) {
+			this.pageInfo.page = num;
+			this.typeView();
+		},
 		toMy() {
 			this.$router.push('/user/my');
 		},

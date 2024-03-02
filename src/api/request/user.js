@@ -46,12 +46,12 @@ const user = {
 			});
 		});
 	},
-	wallet_recharge(info) {
+	wallet_recharge(recharge) {
 		return new Promise(resolve => {
 			axiosInstance({
 				url: ApiPath.USER_WALLET_RECHARGE,
 				method: 'POST',
-				params: info,
+				params: recharge,
 			}).then(res => {
 				resolve(res);
 			});

@@ -1,7 +1,6 @@
 import { ApiPath } from '../index';
 import axiosInstance from '@/utils/request.js';
 
-
 const auction = {
 	audit(auction) {
 		return new Promise(resolve => {
@@ -14,7 +13,7 @@ const auction = {
 			});
 		});
 	},
-    update(auction) {
+	update(auction) {
 		return new Promise(resolve => {
 			axiosInstance({
 				url: ApiPath.AUCTION_UPDATE,
@@ -25,7 +24,7 @@ const auction = {
 			});
 		});
 	},
-    info(auctionId) {
+	info(auctionId) {
 		return new Promise(resolve => {
 			axiosInstance({
 				url: ApiPath.AUCTION_INFO + '/' + auctionId,
@@ -45,7 +44,7 @@ const auction = {
 			});
 		});
 	},
-    list(pageInfo) {
+	list(pageInfo) {
 		return new Promise(resolve => {
 			axiosInstance({
 				url: ApiPath.AUCTION_LIST,
@@ -56,11 +55,11 @@ const auction = {
 			});
 		});
 	},
-    listPublished(pageInfo,type) {
-		if(type){
+	listPublished(pageInfo, type) {
+		if (type) {
 			type = {
-				type: type
-			}
+				type: type,
+			};
 		}
 		return new Promise(resolve => {
 			axiosInstance({
@@ -76,7 +75,7 @@ const auction = {
 	userList(pageInfo) {
 		return new Promise(resolve => {
 			axiosInstance({
-				url: ApiPath.USER_LIST,
+				url: ApiPath.AUCTION_USER_LIST,
 				method: 'GET',
 				params: pageInfo,
 			}).then(res => {

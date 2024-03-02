@@ -3,7 +3,7 @@
 		<el-container>
 			<el-main class="main">
 				<el-table :data="orderList" stripe style="width: 100%">
-					<el-table-column fixed prop="createAt" label="时间" width="150" />
+					<el-table-column fixed prop="createAt" label="时间" width="200" />
 					<el-table-column prop="orderId" label="订单id" />
 					<el-table-column prop="cargoId" label="货物id" />
 					<el-table-column prop="title" label="订单名称" width="120" />
@@ -17,7 +17,16 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<el-pagination small background layout="prev, pager, next" :total="total" />
+				<el-pagination
+					:page-size="pageInfo.limit"
+					:current-page="pageInfo.page"
+					layout="prev, pager, next"
+					:total="total"
+					style="margin: 20px 0"
+					@current-change="pageChange"
+					small
+					background
+				/>
 			</el-main>
 		</el-container>
 	</div>
@@ -25,7 +34,10 @@
 
 <script>
 import { useUserStore } from '@/store';
-var userStore = useUserStore();
+import { User } from '@/api/request';
+import DateUtils from '@/utils/DateUtils';
+const userStore = useUserStore();
+const order = User.order;
 export default {
 	data() {
 		return {
@@ -40,31 +52,34 @@ export default {
 					status: 1,
 					createAt: 0,
 				},
-				{
-					orderId: 8,
-					cargoId: 1,
-					title: 'awq',
-					description: 'aaaa',
-					balance: 100.0,
-					type: 0,
-					status: 1,
-					createAt: 0,
-				},
-				{
-					orderId: 10,
-					cargoId: 4,
-					title: 'test',
-					description: 'test.123456',
-					balance: 130.0,
-					type: 0,
-					status: 4,
-					createAt: 1707121087,
-				},
 			],
-			total: 10 / 15 + 1,
+			pageInfo: {
+				page: 1,
+				limit: 10,
+				filter: '',
+			},
+			total: 10 / 10,
 		};
 	},
+	mounted() {
+		this.typeView();
+	},
 	methods: {
+		typeView() {
+			order.list(this.pageInfo).then(res => {
+				if (res.success) {
+					res.data.data.forEach(item => {
+						item.createAt = DateUtils.formatTimestamp(item.createAt);
+					});
+					this.orderList = res.data.data;
+					this.total = res.data.count;
+				}
+			});
+		},
+		pageChange(num) {
+			this.pageInfo.page = num;
+			this.typeView();
+		},
 		toMy() {
 			this.$router.push('/user/my');
 		},

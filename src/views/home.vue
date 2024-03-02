@@ -112,6 +112,8 @@ export default {
 					router.push({
 						path: '/auction/info/' + res.data.auctionId,
 					});
+				}else{
+					this.$message.error('该拍卖品已被下架');
 				}
 			});
 		},

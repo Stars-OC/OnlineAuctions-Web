@@ -91,6 +91,7 @@
 
 <script>
 import { Auction } from '@/api/request';
+import router from '@/router';
 import DateUtils from '@/utils/DateUtils';
 export default {
 	data() {

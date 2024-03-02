@@ -7,7 +7,8 @@
 						<el-input v-model="wallet.username" disabled />
 					</el-form-item>
 					<el-form-item label="账户余额">
-						<el-input v-model="wallet.money" disabled />
+						<el-input v-model="wallet.money" v-if="recharge" />
+						<el-input v-model="wallet.money" v-else disabled />
 					</el-form-item>
 					<el-form-item label="账户信誉值">
 						<el-input v-model="wallet.fund" disabled />
@@ -34,10 +35,13 @@
 
 <script>
 import { User } from '@/api/request/index';
+import { useUserStore } from '@/store';
+var userStore = useUserStore();
 const wallet = User.user;
 export default {
 	data() {
 		return {
+			recharge: false,
 			wallet: {
 				username: 123,
 				money: 123.0,
@@ -56,12 +60,28 @@ export default {
 			this.wallet = res.data;
 			
 		});
+		if(userStore.userInfo.role == 5){
+			this.recharge = true;
+		}
 	},
 	methods: {
 		toMy() {
 			this.$router.push('/user/my');
 		},
 		updateUserWallet() {
+			if(userStore.userInfo.role == 5){
+				var money = {
+					username: this.wallet.username,
+					money: this.wallet.money
+				} 
+				wallet.wallet_recharge(money).then(res => {
+					if(res.success){
+						this.$message.success('充值成功');
+						return
+					}
+				});
+			}
+			
 			this.$message.error('充值失败');
 		},
 		createUserWallet(){
@@ -72,7 +92,7 @@ export default {
 			wallet.wallet_create(this.createWallet.password).then(res => {
 				if(res.success){
 					this.$message.success('创建成功');
-					this.$router.push('/user/my/coin');
+					this.$router.push('/user/my/');
 				}
 			});
 		}

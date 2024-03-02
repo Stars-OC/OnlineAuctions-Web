@@ -96,6 +96,17 @@ const cargo = {
 			});
 		});
 	},
+	userList(pageInfo) {
+		return new Promise(resolve => {
+			axiosInstance({
+				url: ApiPath.CARGO_USER_LIST,
+				method: 'GET',
+				params: pageInfo,
+			}).then(res => {
+				resolve(res);
+			});
+		});
+	},
 };
 
 export default cargo;
