@@ -66,7 +66,7 @@ const order = {
 			axiosInstance({
 				url: ApiPath.ORDER_INFO + '/' + orderId,
 				method: 'GET',
-				params: info,
+				params: orderId,
 			}).then(res => {
 				resolve(res);
 			});

@@ -66,7 +66,7 @@
 							<template v-slot="scope">
 								{{ scope.row.status }}
 								<el-button
-									v-if="scope.row.status == 2"
+									v-if="scope.row.status == 2 || scope.row.status == 1"
 									style="margin-left: 20px"
 									type="primary"
 									size="small"

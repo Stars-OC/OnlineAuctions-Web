@@ -21,7 +21,7 @@
 					<el-table-column prop="status" label="状态" />
 					<el-table-column fixed="right" label="操作">
 						<template #default="scope">
-							<el-button link type="primary" size="small">查看</el-button>
+							<el-button link type="primary" size="small" @click="checkAuction(scope.row.auctionId)">查看</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -43,6 +43,7 @@
 <script>
 import DateUtils from '@/utils/DateUtils';
 import { Auction } from '@/api/request';
+import router from '@/router';
 export default {
 	data() {
 		return {
@@ -90,6 +91,9 @@ export default {
 				});
 				this.auctionList = res.data.data;
 			}
+		},
+		checkAuction(auctionId){
+			this.$router.push('/auction/info/'+ auctionId);
 		},
 		typeView() {
 			Auction.userList(this.pageInfo).then(res => {

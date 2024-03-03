@@ -24,6 +24,7 @@
 						list-type="picture-card"
 						:on-preview="handlePictureCardPreview"
 						:on-remove="handleRemove"
+						:http-request="uploadImg"
 					>
 						<el-icon><Plus /></el-icon>
 					</el-upload>
@@ -43,7 +44,7 @@
 </template>
 
 <script>
-import { Cargo } from '@/api/request';
+import { Cargo, File } from '@/api/request';
 export default {
 	name: 'CargoEdit',
 	data() {
@@ -53,12 +54,7 @@ export default {
 			auctionEdit: false,
 			isAudit: false,
 			audit: false,
-			fileList: [
-				{
-					name: 'food2.jpeg',
-					url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-				},
-			],
+			fileList: [],
 			form: {
 				name: '',
 				description: '',
@@ -72,11 +68,11 @@ export default {
 	},
 	props: ['cargo', 'operation'],
 	mounted() {
-		console.log(this.cargo);
-		console.log(this.operation);
 		if (this.operation != 'add') {
 			this.dataInit(this.cargo);
 			this.imagesToFileList();
+			console.log(this.form);
+			console.log(this.fileList);
 		}
 	},
 	methods: {
@@ -91,11 +87,55 @@ export default {
 				console.info(data);
 			}
 		},
+		uploadImg(params) {
+			console.clear();
+			const file = params.file,
+				fileType = file.type,
+				isImage = fileType.indexOf('image') != -1,
+				isLt2M = file.size / 1024 / 1024 < 2;
+			// 这里常规检验，看项目需求而定
+			if (!isImage) {
+				this.$message.error('只能上传图片格式png、jpg、gif!');
+				return;
+			}
+			if (!isLt2M) {
+				this.$message.error('只能上传图片大小小于2M');
+				return;
+			}
+			// 根据后台需求数据格式
+			const form = new FormData();
+			// 文件对象
+			form.append('file', file);
+			File.upload_cargo_image(form).then(res => {
+				if (res.success) {
+					this.$message({
+						message: '上传成功',
+						type: 'success',
+					});
+					var data = res.data;
+					const parts = data.split('/');
+					const id = parts[parts.length - 1];
+					
+					this.fileList.forEach((item, index) => {
+						if (item.status === "ready") {
+							this.fileList.splice(index, 1);
+						}
+					});
+					this.fileList.push({
+						name: id,
+						url: data,
+					});
+				} else {
+					this.$message({
+						message: '上传失败',
+						type: 'error',
+					});
+				}
+			});
+		},
 		handleRemove(uploadFile, uploadFiles) {
-			// 默认会删
-			// console.log(uploadFile);
-			// console.log(uploadFiles);
-			// console.log(this.form.resource.images);
+			uploadFiles.filter(obj => obj.name !== uploadFile.name);
+
 		},
 		handlePictureCardPreview(uploadFile) {
 			this.dialogImageUrl = uploadFile.url;
@@ -140,6 +180,7 @@ export default {
 		},
 
 		fileListToImages() {
+			this.form.resource.images = [];
 			if (this.fileList.length == 0) {
 				this.form.resource.images = [];
 				return;
@@ -157,9 +198,9 @@ export default {
 				};
 			}
 		},
-		close(){
+		close() {
 			this.$emit('close');
-		}
+		},
 	},
 };
 </script>

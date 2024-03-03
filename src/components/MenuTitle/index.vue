@@ -11,9 +11,14 @@
 		<div class="flex-grow" />
 		<el-menu-item index="/admin/manager" v-if="isAdmin"> 管理系统 </el-menu-item>
 
-		<el-menu-item >
+		<el-menu-item>
 			<el-button class="login-tag" v-if="!isLogin" type="primary" round @click="login">登录/注册</el-button>
-			<div class="login-tag" v-else style="width: 50px;"   @click="toMy">我的</div>
+			<el-button class="login-tag" v-else style="width: 50px" text @click="toMy">我的</el-button>
+		</el-menu-item>
+		<el-menu-item>
+			<el-button class="login-tag" v-if="isLogin" style="width: 50px; margin-right: 20px" text @click="logoff"
+				>退出登录</el-button
+			>
 		</el-menu-item>
 	</el-menu>
 </template>
@@ -38,14 +43,19 @@ export default {
 			if (userStore.userInfo.role != 0) {
 				this.isAdmin = true;
 			}
-			console.log(this.isLogin)
+			console.log(this.isLogin);
 		}
 	},
 	methods: {
-		toMy(){
+		toMy() {
 			this.$router.push('/user/my');
 		},
 		login() {
+			this.$router.push('/login');
+		},
+		logoff() {
+			var userStore = useUserStore();
+			userStore.clearToken();
 			this.$router.push('/login');
 		},
 	},
@@ -60,6 +70,7 @@ export default {
 .login-tag {
 	justify-content: center;
 	align-items: center;
+	color: #000;
 }
 .logo {
 	font-size: 20px;

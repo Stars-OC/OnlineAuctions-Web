@@ -56,12 +56,10 @@ export default {
 		};
 	},
 	props: ['order'],
-	created() {
-		this.setOrderTypeText();
-		this.setOrderStatusText();
-	},
 	mounted() {
 		this.orderInfo = this.order;
+		this.setOrderTypeText();
+		this.setOrderStatusText();
 	},
 	methods: {
 		setOrderTypeText() {

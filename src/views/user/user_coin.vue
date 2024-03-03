@@ -2,7 +2,7 @@
 	<div>
 		<el-container>
 			<el-main class="main">
-				<el-form class="form" v-if="wallet.username">
+				<el-form class="form" v-if="wallet">
 					<el-form-item label="用户id">
 						<el-input v-model="wallet.username" disabled />
 					</el-form-item>
@@ -56,7 +56,7 @@ export default {
 	},
 	mounted() {
 		wallet.wallet_info().then(res => {
-			console.log(res);
+			
 			this.wallet = res.data;
 			
 		});

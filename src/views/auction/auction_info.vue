@@ -106,8 +106,9 @@ export default {
 		this.getAuctionLogs();
 		this.timer = setInterval(() => {
 			this.checkState();
+			this.getAuctionLogs();
+			this.init = true;
 		}, 1000); // 更新频率为每秒
-		this.init = true;
 	},
 	beforeDestroy() {
 		// 在组件销毁前清除定时器，以防止内存泄漏
@@ -132,12 +133,22 @@ export default {
 				console.log(res);
 				if (res.success) {
 					this.state = res.data;
-				} else if (!this.init) {
+					this.state.updateAt = new Date();
+					return;
+				} else {
+					if (!this.init) {
+						this.$message({
+							message: res.msg,
+							type: 'error',
+						});
+						this.goBack();
+						return;
+					}
 					this.$message({
 						message: res.msg,
 						type: 'error',
 					});
-					this.goBack();
+					this.state.endTime = 0;
 				}
 			});
 		},
@@ -169,6 +180,7 @@ export default {
 					});
 				}
 			});
+			this.auctionInfo();
 		},
 		goBack() {
 			this.$router.go(-1);

@@ -2,7 +2,7 @@ const ApiPath = {
 	LOGIN: '/api/auth/login',
 	REGISTER: 'api/auth/register',
 	LOGOFF: '/api/auth/logoff',
-	USER_UPDATE: '/api/user/update',
+	USER_UPDATE: '/api/user/update/info',
 	USER_LIST: '/api/user/list',
 	USER_WALLET_CREATE: '/api/user/balance/wallet/create',
 	USER_WALLET_INFO: '/api/user/balance/wallet/info',

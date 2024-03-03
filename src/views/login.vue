@@ -71,7 +71,7 @@ export default {
 				if (res.success) {
 					userStore.saveToken(res.data);
 					if (userStore.userInfo.role == 0) {
-						this.$router.push({ name: 'home' });
+						this.$router.back(-1);
 					} else if (userStore.userInfo.role != null) {
 						this.$router.push({ name: 'user_manager' });
 					}

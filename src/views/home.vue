@@ -83,7 +83,70 @@ export default {
 				'https://imgqnb.epailive.com/cloud_60_ad_1709083841211.jpg',
 				'https://imgqna.epailive.com/cloud_60_ad_1708767666782.png',
 			],
-			cargoList: [],
+			cargoList: [
+				{
+					cargoId: 2,
+					name: '114514',
+					description: '123456',
+					type: '0',
+					seller: 123456,
+					time: '1706850824/1706850824',
+					resource: {
+						images: [
+							'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
+						],
+						video: [],
+					},
+					status: 0,
+				},
+				{
+					cargoId: 14,
+					name: '啊啊啊',
+					description: '啊啊',
+					resource: {
+						images: [
+							'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
+						],
+						videos: [],
+					},
+					type: '2',
+					seller: 123456,
+					createAt: 1708355816,
+					updateAt: 1708355816,
+					status: 0,
+				},
+				{
+					cargoId: 2,
+					name: '114514',
+					description: '123456',
+					type: '0',
+					seller: 123456,
+					time: '1706850824/1706850824',
+					resource: {
+						images: [
+							'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
+						],
+						video: [],
+					},
+					status: 0,
+				},
+				{
+					cargoId: 14,
+					name: '啊啊啊',
+					description: '啊啊',
+					resource: {
+						images: [
+							'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
+						],
+						videos: [],
+					},
+					type: '2',
+					seller: 123456,
+					createAt: 1708355816,
+					updateAt: 1708355816,
+					status: 0,
+				},
+			],
 		};
 	},
 	mounted() {
@@ -112,7 +175,7 @@ export default {
 					router.push({
 						path: '/auction/info/' + res.data.auctionId,
 					});
-				}else{
+				} else {
 					this.$message.error('该拍卖品已被下架');
 				}
 			});

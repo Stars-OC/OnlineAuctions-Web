@@ -74,13 +74,13 @@ export default {
 	},
 	methods: {
 		typeView() {
-			Cargo.list(this.pageInfo).then(res => {
+			Cargo.userList(this.pageInfo).then(res => {
 				this.dateChange(res);
 			});
 		},
 		dateChange(res) {
 			if (res.success) {
-				console.log(res);
+				// console.log(res);
 				this.total = res.data.count;
 				res.data.data.forEach(item => {
 					item.createAt = DateUtils.formatTimestamp(item.createAt);

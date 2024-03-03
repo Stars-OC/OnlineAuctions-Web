@@ -1,16 +1,15 @@
 <template>
 	<div class="xtx-pay-page">
-        <menu-title></menu-title>
-        		<div class="container">
+		<menu-title></menu-title>
+		<div class="container">
 			<!-- 付款信息 -->
 			<div class="pay-info">
-				<img class="icon " src="@/assets/images/success.svg"></img>
+				<img class="icon" src="@/assets/images/success.svg" />
 				<div class="tip">
 					<p>订单提交成功！请尽快完成支付。</p>
 
 					<p v-if="countdown > -1">
-						支付还剩 <span>{{ countdown }} s</span
-						>, 超时后将取消订单
+						支付还剩 <span>{{ countdown }} s</span>, 超时后将取消订单
 					</p>
 
 					<p v-else>订单已经超时</p>
@@ -29,7 +28,7 @@
 					<a class="btn wx" href="javascript:;"></a>
 					<a class="btn alipay" href="javascript:;"></a>
 				</div>
-                
+
 				<div class="item">
 					<p>支付方式</p>
 					<a class="btn" href="javascript:;" @click="method">余额支付</a>
@@ -39,34 +38,92 @@
 					<a class="btn" href="javascript:;">交通银行</a>
 				</div>
 			</div>
-            <div class="pay-password">
-                <el-input v-if="select" type="password" placeholder="请输入支付密码" v-model="password" style="width: 13%;"></el-input>
-                <el-input v-else disabled type="password" placeholder="请输入支付密码" v-model="password" style="width: 13%;"></el-input>
-                <el-button  type="primary" @click="pay" style="margin-left: 30px;">立即支付</el-button>
-            </div>
+			<div class="pay-password">
+				<el-input
+					v-if="select"
+					type="password"
+					placeholder="请输入支付密码"
+					v-model="password"
+					style="width: 13%"
+				></el-input>
+				<el-input
+					v-else
+					disabled
+					type="password"
+					placeholder="请输入支付密码"
+					v-model="password"
+					style="width: 13%"
+				></el-input>
+				<el-button type="primary" @click="pay" style="margin-left: 30px">立即支付</el-button>
+			</div>
 		</div>
 	</div>
 </template>
 <script>
+import { User } from '@/api/request';
+const order = User.order;
 export default {
 	data() {
 		return {
-            orderId: this.$route.params.id,
-            select: false,
+			orderId: this.$route.params.id,
+			select: false,
 			countdown: 132,
 			money: 130,
-            password: ''
+			password: '',
 		};
 	},
-    methods: {
-        method(){
-            this.select = true;
-            console.log(this.orderId)
-        },
-        pay(){
-
-        }
-    }
+	mounted() {
+		order.info(this.orderId).then(res => {
+			if (res.success) {
+				this.money = res.data.balance;
+				this.countdown = res.data.createAt - Date.now() / 1000 - 30 * 60;
+				this.timer = setInterval(() => {
+					this.TimeChange();
+				}, 1000); // 更新频率为每秒
+			}
+		});
+	},
+	beforeDestroy() {
+		// 在组件销毁前清除定时器，以防止内存泄漏
+		clearInterval(this.timer);
+	},
+	beforeRouteLeave(to, from, next) {
+		// 在用户离开页面时销毁定时器
+		clearInterval(this.timer);
+		next();
+	},
+	methods: {
+		method() {
+			this.select = true;
+			this.$message.success('你选择了余额支付，请支付');
+		},
+		pay() {
+			if (this.select) {
+				var order = {
+					orderId: this.orderId,
+					password: this.password,
+				};
+				order.pay(order).then(res => {
+					if (res.success) {
+						this.$message.success('支付成功');
+						this.$router.go(-1);
+					} else {
+						this.$message.error('支付失败');
+					}
+				});
+			} else {
+				this.$message.error('请选择支付方式');
+			}
+		},
+		TimeChange() {
+			--this.countdown;
+			if (this.countdown > -1) {
+				this.$message.error('支付失败，该订单不存在');
+				this.$router.go(-1);
+				return;
+			}
+		},
+	},
 };
 </script>
 <style scoped lang="scss">
@@ -77,7 +134,7 @@ export default {
 	height: 240px;
 	padding: 0 80px;
 	.icon {
-        background-image: '';
+		background-image: '';
 		font-size: 80px;
 		color: #1dc779;
 	}
@@ -142,12 +199,11 @@ export default {
 			background: url(https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/c66f98cff8649bd5ba722c2e8067c6ca.jpg) no-repeat
 				center / contain;
 		}
-        &.ye{
-            
-        }
+		&.ye {
+		}
 	}
 }
-.pay-password{
-    text-align: center;
+.pay-password {
+	text-align: center;
 }
 </style>

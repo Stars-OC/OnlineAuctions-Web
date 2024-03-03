@@ -31,7 +31,7 @@ instance.interceptors.response.use(
 		// 对于 HTTP 状态码非 200 的响应，将错误信息以 Promise.reject 的形式返回
 		if (response.data.code === 2004) {
 			router.push('/');
-			this.message.error('无权访问！');
+			return Promise.reject(response.data);
 		}
 		if (response.status !== 200) {
 			return Promise.reject(response.data);

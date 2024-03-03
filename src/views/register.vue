@@ -91,6 +91,12 @@ export default {
 			},
 		};
 	},
+	mounted() {
+		var userStore = useUserStore();
+		if(useUserStore().userInfo) {
+			this.$router.push('/');
+		}
+	},
 	methods: {
 		register() {
 			if(this.registerForm.username == '' || this.registerForm.password == '' || this.registerForm.nickname == ''){

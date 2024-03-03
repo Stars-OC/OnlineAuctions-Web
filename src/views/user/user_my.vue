@@ -32,7 +32,7 @@
 					</el-form-item>
 				</el-form>
 				<div style="text-align: center">
-					<el-button size="large" type="primary" @click="updateUser">更新</el-button>
+					<el-button  type="primary" @click="updateUser">更新</el-button>
 				</div>
 			</el-main>
 		</el-container>
@@ -41,6 +41,8 @@
 
 <script>
 import { useUserStore } from '@/store';
+import { User } from '@/api/request/index';
+const user = User.user;
 import DateUtils from '@/utils/DateUtils';
 var userStore = useUserStore();
 export default {
@@ -69,7 +71,14 @@ export default {
 			this.$router.push('/user/my');
 		},
 		updateUser() {
-			console.log(this.user);
+			user.update(this.user).then(res => {
+				if (res.success) {
+					userStore.saveToken(res.data);
+					this.$message.success('更新成功');
+					console.log(userStore.userInfo);
+					return
+				}
+			});
 		},
 		handleAvatarSuccess(res, file) {
 			this.user.avatarUrl = URL.createObjectURL(file.raw);
