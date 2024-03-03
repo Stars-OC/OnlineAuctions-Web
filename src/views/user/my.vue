@@ -8,7 +8,14 @@
 						<el-card class="header">
 							<el-row :gutter="25">
 								<el-col :span="4">
-									<img class="avatar" :src="user.avatarUrl? user.avatarUrl : 'https://bpic.588ku.com/element_origin_min_pic/19/10/09/d452ed4244c8905649194043ef1749f9.jpg'" />
+									<img
+										class="avatar"
+										:src="
+											user.avatarUrl
+												? user.avatarUrl
+												: 'https://bpic.588ku.com/element_origin_min_pic/19/10/09/d452ed4244c8905649194043ef1749f9.jpg'
+										"
+									/>
 								</el-col>
 								<el-col :span="10" style="margin-top: 16px">
 									{{ user.nickname }}
@@ -76,7 +83,6 @@
 import { useUserStore } from '@/store';
 var userStore = useUserStore();
 export default {
-	
 	data() {
 		return {
 			dialogVisible: false,
@@ -95,12 +101,10 @@ export default {
 		};
 	},
 	mounted() {
-		
 		this.user = userStore.userInfo;
 	},
 	methods: {
 		toMy() {
-			
 			this.active = '/user/my';
 			this.$router.push('/user/my');
 		},

@@ -35,6 +35,9 @@
 			</el-row>
 		</el-card>
 	</div>
+	<div class="order-paid" v-if="orderInfo.status === 0">
+		<el-button type="primary" @click="paid">支付</el-button>
+	</div>
 </template>
 
 <script>
@@ -82,13 +85,13 @@ export default {
 					this.orderStatusText = '待支付';
 					break;
 				case 1:
-					this.orderStatusText = '已支付';
+					this.orderStatusText = '支付完成';
 					break;
 				case 2:
-					this.orderStatusText = '已发货';
+					this.orderStatusText = '支付失败';
 					break;
 				case 3:
-					this.orderStatusText = '已完成';
+					this.orderStatusText = '支付超时 ';
 					break;
 				case 4:
 					this.orderStatusText = '已取消';
@@ -96,7 +99,12 @@ export default {
 				default:
 					this.orderStatusText = '未知状态';
 			}
-		}
+		},
+		paid() {
+			this.$router.push({
+				path: '/order/paid/' + this.orderInfo.orderId,
+			});
+		},
 	},
 };
 </script>
@@ -107,7 +115,10 @@ export default {
 	margin: 0 auto;
 	padding: 20px;
 }
-
+.order-paid {
+	text-align: center;
+	margin-top: 20px;
+}
 .order-card {
 	border-radius: 10px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);

@@ -6,8 +6,7 @@
 					class="avatar-uploader"
 					action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
 					:show-file-list="false"
-					:on-success="handleAvatarSuccess"
-					:before-upload="beforeAvatarUpload"
+					:http-request="uploadImg"
 				>
 					<el-icon class="avatar-uploader-icon"><Plus /></el-icon>
 				</el-upload>
@@ -41,7 +40,7 @@
 
 <script>
 import { useUserStore } from '@/store';
-import { User } from '@/api/request/index';
+import { User,File } from '@/api/request/index';
 const user = User.user;
 import DateUtils from '@/utils/DateUtils';
 var userStore = useUserStore();
@@ -64,11 +63,46 @@ export default {
 	mounted() {
 		
 		this.user = userStore.userInfo;
-		this.user.createAt = DateUtils.formatTimestamp(userStore.userInfo.createAt);
+		this.user.createAt = DateUtils.formatTimestamp(this.user.createAt);
 	},
 	methods: {
 		toMy() {
 			this.$router.push('/user/my');
+		},
+		uploadImg(params) {
+			const file = params.file,
+				fileType = file.type,
+				isImage = fileType.indexOf('image') != -1,
+				isLt2M = file.size / 1024 / 1024 < 2;
+			// 这里常规检验，看项目需求而定
+			if (!isImage) {
+				this.$message.error('只能上传图片格式png、jpg、gif!');
+				return;
+			}
+			if (!isLt2M) {
+				this.$message.error('只能上传图片大小小于2M');
+				return;
+			}
+			// 根据后台需求数据格式
+			const form = new FormData();
+			// 文件对象
+			form.append('file', file);
+			File.upload_avatar(form).then(res => {
+				if (res.success) {
+					this.$message({
+						message: '上传成功',
+						type: 'success',
+					});
+					this.user.avatarUrl = res.data;
+					
+				
+				} else {
+					this.$message({
+						message: '上传失败',
+						type: 'error',
+					});
+				}
+			});
 		},
 		updateUser() {
 			user.update(this.user).then(res => {

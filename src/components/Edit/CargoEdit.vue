@@ -115,9 +115,9 @@ export default {
 					var data = res.data;
 					const parts = data.split('/');
 					const id = parts[parts.length - 1];
-					
+
 					this.fileList.forEach((item, index) => {
-						if (item.status === "ready") {
+						if (item.status === 'ready') {
 							this.fileList.splice(index, 1);
 						}
 					});
@@ -135,7 +135,6 @@ export default {
 		},
 		handleRemove(uploadFile, uploadFiles) {
 			uploadFiles.filter(obj => obj.name !== uploadFile.name);
-
 		},
 		handlePictureCardPreview(uploadFile) {
 			this.dialogImageUrl = uploadFile.url;

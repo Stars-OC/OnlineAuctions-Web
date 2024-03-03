@@ -56,6 +56,7 @@ export default {
 		return {
 			auctionId: this.$route.params.id,
 			init: false,
+			end: false,
 			addOperation: {
 				auctionId: this.$route.params.id,
 				additionalPrice: 0,
@@ -141,13 +142,16 @@ export default {
 							message: res.msg,
 							type: 'error',
 						});
-						this.goBack();
+						// this.goBack();
 						return;
 					}
-					this.$message({
-						message: res.msg,
-						type: 'error',
-					});
+					this.end = true;
+					if (this.end) {
+						this.$message({
+							message: res.msg,
+							type: 'error',
+						});
+					}
 					this.state.endTime = 0;
 				}
 			});

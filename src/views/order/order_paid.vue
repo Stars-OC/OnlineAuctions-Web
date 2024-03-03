@@ -76,7 +76,7 @@ export default {
 		order.info(this.orderId).then(res => {
 			if (res.success) {
 				this.money = res.data.balance;
-				this.countdown = res.data.createAt - Date.now() / 1000 - 30 * 60;
+				this.countdown = res.data.createAt - Date.now() / 1000 + 30 * 60;
 				this.timer = setInterval(() => {
 					this.TimeChange();
 				}, 1000); // 更新频率为每秒
@@ -99,11 +99,12 @@ export default {
 		},
 		pay() {
 			if (this.select) {
-				var order = {
+				var orderInfo = {
 					orderId: this.orderId,
 					password: this.password,
 				};
-				order.pay(order).then(res => {
+				order.pay(orderInfo).then(res => {
+					console.log(res);
 					if (res.success) {
 						this.$message.success('支付成功');
 						this.$router.go(-1);
@@ -117,7 +118,7 @@ export default {
 		},
 		TimeChange() {
 			--this.countdown;
-			if (this.countdown > -1) {
+			if (this.countdown < -1) {
 				this.$message.error('支付失败，该订单不存在');
 				this.$router.go(-1);
 				return;
