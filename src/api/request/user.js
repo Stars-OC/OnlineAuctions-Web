@@ -14,7 +14,7 @@ const user = {
 			});
 		});
 	},
-    list(pageInfo) {
+	list(pageInfo) {
 		return new Promise(resolve => {
 			axiosInstance({
 				url: ApiPath.USER_LIST,
@@ -57,11 +57,10 @@ const user = {
 			});
 		});
 	},
-    
 };
 
 const order = {
-	info(orderId){
+	info(orderId) {
 		return new Promise(resolve => {
 			axiosInstance({
 				url: ApiPath.ORDER_INFO + '/' + orderId,
@@ -83,12 +82,16 @@ const order = {
 			});
 		});
 	},
-	pay(order) {
+	pay(orderInfo) {
+		var payInfo = {
+			password: Base64Utils.encode(orderInfo.password),
+			orderId: orderInfo.orderId,
+		};
 		return new Promise(resolve => {
 			axiosInstance({
 				url: ApiPath.ORDER_PAY,
 				method: 'POST',
-				data: order,
+				data: payInfo,
 			}).then(res => {
 				resolve(res);
 			});
